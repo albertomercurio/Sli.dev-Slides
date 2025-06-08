@@ -1,13 +1,12 @@
 ---
 # You can also start simply with 'default'
 theme: default
-background: assets/vincent_circuit.png
 title: Engineering and Exploring Ultrastrong and Superstrong Coupling Regimes in Quantum Electrodynamics
 # https://sli.dev/features/drawing
 drawings:
   persist: false
 # slide transition: https://sli.dev/guide/animations.html#slide-transitions
-transition: slide-left
+transition: fade-out
 # enable MDC Syntax: https://sli.dev/features/mdc
 mdc: true
 # open graph
@@ -33,6 +32,20 @@ layout: center
 
 # Ciaone
 
+---
+transition: view-transition
+mdc: true
+---
+
+# View Transition {.inline-block.view-transition-title}
+
+<div view-transition-name="shared-box" class="bg-red-500 w-32 h-32"></div>
+
+---
+
+# Vista Transizione {.inline-block.view-transition-title}
+
+<div view-transition-name="shared-box" class="bg-blue-500 w-64 h-64 rounded-full"></div>
 
 ---
 layout: center
