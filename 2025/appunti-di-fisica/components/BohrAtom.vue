@@ -1,14 +1,14 @@
 <template>
   <svg :width="size" :height="size" :viewBox="viewBox">
     <!-- Orbits -->
-    <circle v-for="(count, i) in orbits"
-            :key="'orbit-' + i"
-            :r="radiusStep * (i + 1)"
-            stroke="#888"
-            fill="none"
-            stroke-dasharray="4 4"
-            :cx="center"
-            :cy="center" />
+    <ellipse v-for="(count, i) in orbits"
+             :key="'orbit-' + i"
+             class="orbit"
+             :cx="center"
+             :cy="center"
+             :rx="radiusStep * (i + 1) * orbit_radius_ratio[i]"
+             :ry="radiusStep * (i + 1)"
+             :transform="`rotate(45 ${center} ${center})`"/>
 
     <!-- Electrons -->
     <g v-for="(count, i) in orbits"
@@ -42,8 +42,9 @@ import { gsap } from 'gsap'
 import { onSlideEnter, onSlideLeave } from '@slidev/client'
 
 const props = defineProps({
-  orbits: { type: Array, default: () => [2, 4] },
+  orbits: { type: Array, default: () => [2, 3] },
   speeds: { type: Array, default: () => [6, 4] },
+  orbit_radius_ratio: { type: Array, default: () => [1, 1.5] },
   size: { type: Number, default: 200 },
   protons: { type: Number, default: 3 },
   neutrons: { type: Number, default: 4 },
@@ -121,3 +122,13 @@ onSlideLeave(() => {
 })
 
 </script>
+
+<style scoped>
+
+.orbit {
+  fill: none;
+  stroke: #888;
+  stroke-dasharray: 4 4;
+}
+
+</style>
