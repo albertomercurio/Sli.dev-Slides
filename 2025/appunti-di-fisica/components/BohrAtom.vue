@@ -1,16 +1,16 @@
 <template>
-    <svg :width="size" :height="size" :viewBox="viewBox">
+    <svg ref="svgRootRef" :width="size" :height="size" :viewBox="viewBox">
         <!-- Orbits -->
-        <ellipse v-for="(count, i) in orbits" class="orbit" :key="'orbit-' + i" :id="'orbit-' + i" :cx="center"
-            :cy="center" :rx="radiusStep * (i + 1) * orbit_radius_ratio[i]" :ry="radiusStep * (i + 1)"
+        <ellipse v-for="(count, i) in orbits" class="orbit" :key="'orbit-' + i" :cx="center" :cy="center"
+            :rx="radiusStep * (i + 1) * orbit_radius_ratio[i]" :ry="radiusStep * (i + 1)"
             :transform="`rotate(45 ${center} ${center})`" />
 
-        <!-- Electrons -->
-        <template v-for="(electronCount, orbitIndex) in orbits" :key="'electrons-' + orbitIndex">
-            <circle v-for="electronIndex in electronCount" :key="'e-' + orbitIndex + '-' + electronIndex"
-                :id="'electron-' + orbitIndex + '-' + electronIndex" class="electron" :cx="center" :cy="center" />
-        </template>
-
+        <!-- Electrons: Grouped by orbit -->
+        <g v-for="(electronCount, orbitIndex) in orbits" :key="'electron-group-' + orbitIndex"
+            :class="`electron-group-${orbitIndex}`">
+            <circle v-for="n in electronCount" :key="'e-' + orbitIndex + '-' + n" class="electron" :cx="center"
+                :cy="center" />
+        </g>
 
         <!-- Nucleus: Alternating protons (red) and neutrons (gray) -->
         <circle v-for="(pos, i) in [...nucleusLayout].reverse()" :key="'nucleon-' + i" :cx="pos[0]" :cy="pos[1]"
@@ -19,6 +19,7 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { gsap } from 'gsap'
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin'
 import { onSlideEnter, onSlideLeave } from '@slidev/client'
@@ -39,34 +40,48 @@ const viewBox = `0 0 ${props.size} ${props.size}`
 const nucleonRadius = 4
 const nucleusLayout = generatePackedNucleusAlternating(props.totalNucleons)
 
+const svgRootRef = ref(null);
+
 let ctx;
 onSlideEnter(() => {
+    if (!svgRootRef.value) {
+        console.warn("[BohrAtom] svgRootRef is not yet available.");
+        return;
+    }
+
     ctx = gsap.context(() => {
+        const orbitElements = svgRootRef.value.querySelectorAll('.orbit');
+
         props.orbits.forEach((electronCount, orbitIndex) => {
-            const orbitPath = MotionPathPlugin.convertToPath(`#orbit-${orbitIndex}`)[0];
-            for (let electronIndex = 0; electronIndex < electronCount; electronIndex++) {
-                gsap.to(`#electron-${orbitIndex}-${electronIndex + 1}`, {
+            const orbitElement = orbitElements[orbitIndex];
+            const orbitPath = MotionPathPlugin.convertToPath(orbitElement)?.[0];
+
+            const electronNodes = svgRootRef.value.querySelectorAll(`.electron-group-${orbitIndex} .electron`);
+
+            electronNodes.forEach((electronNode, electronNodeIndex) => {
+                gsap.to(electronNode, {
                     motionPath: {
                         path: orbitPath,
                         align: orbitPath,
                         alignOrigin: [0.5, 0.5],
-                        start: electronIndex / electronCount,
-                        end: (electronIndex / electronCount) + 1,
+                        start: electronNodeIndex / electronCount,
+                        end: (electronNodeIndex / electronCount) + 1,
                     },
-                    duration: props.speeds[orbitIndex] || 5, // Default to 5 if speed not provided
+                    duration: props.speeds[orbitIndex] || 5,
                     repeat: -1,
                     ease: "linear",
                 });
-            }
+            });
         });
-    });
+    }, svgRootRef.value); // Scope the context to the component's root SVG element
 })
 
 onSlideLeave(() => {
     // We delay the revert to avoid abrupt stops during slide transitions
-    gsap.delayedCall(0.5, () => {
-        ctx.revert()
-    })
+    // gsap.delayedCall(0.5, () => {
+    //     ctx.revert()
+    // })
+    ctx.revert()
 })
 
 function generatePackedNucleusAlternating(total) {
