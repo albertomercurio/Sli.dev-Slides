@@ -1,10 +1,13 @@
 <template>
   <svg :width="size" :height="size" :viewBox="viewBox">
     <!-- Orbits -->
-    <path class="orbit"
-          :key="'orbit-' + 1"
-          id="succhiale1"
-          :d="getEllipsePath(center, center, radiusStep * (1 + 1) * orbit_radius_ratio[1], radiusStep * (1 + 1))"/>
+    <ellipse class="orbit"
+             id="succhiale1"
+             :cx="center"
+             :cy="center"
+             :rx="radiusStep * (1 + 1) * orbit_radius_ratio[1]"
+             :ry="radiusStep * (1 + 1)"
+             :transform="`rotate(45 ${center} ${center})`"/>
 
     <!-- Electrons -->
     <circle class="electron"
@@ -36,22 +39,14 @@ const center = props.size / 2
 const radiusStep = props.size / 8
 const viewBox = `0 0 ${props.size} ${props.size}`
 
-function getEllipsePath(cx, cy, rx, ry) {
-  // Draws a full ellipse with two arcs
-  return `
-    M ${cx - rx}, ${cy}
-    A ${rx} ${ry} 0 1 0 ${cx + rx} ${cy}
-    A ${rx} ${ry} 0 1 0 ${cx - rx} ${cy}
-`;
-}
-
 let ctx;
 onSlideEnter(() => {
     ctx = gsap.context(() => {
+        let orbitPath = MotionPathPlugin.convertToPath("#succhiale1")[0];
         gsap.to(".electron", {
             motionPath: {
-                path: "#succhiale1",
-                align: "#succhiale1",
+                path: orbitPath,
+                align: orbitPath,
                 alignOrigin: [0.5, 0.5],
             },
             duration: 2,

@@ -28,26 +28,32 @@ Alberto Mercurio
 
 ---
 layout: center
+transition: view-transition
 ---
 
 # Ciaone
+
+Lorenzo suca <span view-transition-name="equation">$\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}$</span>
 
 <BohrAtom />
 
 ---
 transition: view-transition
-mdc: true
 ---
 
 # View Transition {.inline-block.view-transition-title}
 
 <div view-transition-name="shared-box" class="bg-red-500 w-32 h-32"></div>
 
+<span view-transition-name="equation">$\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}$</span>
+
+<BohrAtom2 />
+
 ---
 
 # Vista Transizione {.inline-block.view-transition-title}
 
-<div view-transition-name="shared-box" class="bg-blue-500 w-64 h-64 rounded-full"></div>
+<div view-transition-name="shared-box" class="bg-blue-500 w-64 h-64"></div>
 
 ---
 layout: center
