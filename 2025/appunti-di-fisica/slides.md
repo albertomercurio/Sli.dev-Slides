@@ -47,7 +47,7 @@ transition: view-transition
 
 <span view-transition-name="equation">$\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}$</span>
 
-<BohrAtom2 />
+<BohrAtom />
 
 ---
 
