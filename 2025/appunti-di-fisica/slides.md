@@ -6,7 +6,7 @@ title: Exploring Ultrastrong and Superstrong Coupling Regimes in Quantum Electro
 drawings:
   persist: false
 # slide transition: https://sli.dev/guide/animations.html#slide-transitions
-transition: fade-out
+transition: view-transition
 # enable MDC Syntax: https://sli.dev/features/mdc
 mdc: true
 # open graph
@@ -25,6 +25,12 @@ class: h-full flex flex-col text-center
 
 Alberto Mercurio
 
+<!-- Put BohrAtom component in the bottom-right -->
+<div class="absolute bottom-0 right-0 mr-16 mb-4 flex items-center gap-x-2">
+<CavityMirror />
+<BohrAtom view-transition-name="atomello" :size=150 />
+<CavityMirror class="rotate-180" />
+</div>
 
 ---
 layout: center
@@ -35,7 +41,8 @@ transition: view-transition
 
 Lorenzo suca <span view-transition-name="equation">$\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}$</span>
 
-<BohrAtom />
+<BohrAtom view-transition-name="atomello" />
+
 
 ---
 transition: view-transition
@@ -47,7 +54,8 @@ transition: view-transition
 
 <span view-transition-name="equation">$\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}$</span>
 
-<BohrAtom />
+<BohrAtom view-transition-name="atomello" />
+
 
 ---
 

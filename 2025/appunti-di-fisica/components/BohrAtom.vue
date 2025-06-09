@@ -1,5 +1,5 @@
 <template>
-    <svg ref="svgRootRef" :width="size" :height="size" :viewBox="viewBox">
+    <svg ref="rootRef" :width="size" :height="size" :viewBox="viewBox">
         <!-- Orbits -->
         <ellipse v-for="(count, i) in orbits" class="orbit" :key="'orbit-' + i" :cx="center" :cy="center"
             :rx="radiusStep * (i + 1) * orbit_radius_ratio[i]" :ry="radiusStep * (i + 1)"
@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import { gsap } from 'gsap'
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin'
 import { onSlideEnter, onSlideLeave } from '@slidev/client'
@@ -40,23 +40,19 @@ const viewBox = `0 0 ${props.size} ${props.size}`
 const nucleonRadius = 4
 const nucleusLayout = generatePackedNucleusAlternating(props.totalNucleons)
 
-const svgRootRef = ref(null);
+const rootRef = ref(null);
 
 let ctx;
-onSlideEnter(() => {
-    if (!svgRootRef.value) {
-        console.warn("[BohrAtom] svgRootRef is not yet available.");
-        return;
-    }
-
+onSlideEnter(async () => {
+    await nextTick(); // Ensure the DOM is updated before accessing rootRef
     ctx = gsap.context(() => {
-        const orbitElements = svgRootRef.value.querySelectorAll('.orbit');
+        const orbitElements = rootRef.value.querySelectorAll('.orbit');
 
         props.orbits.forEach((electronCount, orbitIndex) => {
             const orbitElement = orbitElements[orbitIndex];
             const orbitPath = MotionPathPlugin.convertToPath(orbitElement)?.[0];
 
-            const electronNodes = svgRootRef.value.querySelectorAll(`.electron-group-${orbitIndex} .electron`);
+            const electronNodes = rootRef.value.querySelectorAll(`.electron-group-${orbitIndex} .electron`);
 
             electronNodes.forEach((electronNode, electronNodeIndex) => {
                 gsap.to(electronNode, {
@@ -73,14 +69,10 @@ onSlideEnter(() => {
                 });
             });
         });
-    }, svgRootRef.value); // Scope the context to the component's root SVG element
+    }, rootRef.value); // Scope the context to the component's root element
 })
 
 onSlideLeave(() => {
-    // We delay the revert to avoid abrupt stops during slide transitions
-    // gsap.delayedCall(0.5, () => {
-    //     ctx.revert()
-    // })
     ctx.revert()
 })
 

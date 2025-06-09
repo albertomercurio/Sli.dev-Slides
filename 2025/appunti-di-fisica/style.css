@@ -1,0 +1,4 @@
+/* styles.css or a <style> block in your first slide ----------------*/
+:root::view-transition-group(*) {
+  animation-duration: 1.5s;          /* ← make it 3× slower */
+}
