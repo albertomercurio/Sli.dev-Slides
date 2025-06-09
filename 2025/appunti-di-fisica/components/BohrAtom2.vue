@@ -1,20 +1,27 @@
 <template>
   <svg :width="size" :height="size" :viewBox="viewBox">
     <!-- Orbits -->
-    <ellipse class="orbit"
-             id="succhiale1"
+    <ellipse v-for="(count, i) in orbits"
+             class="orbit"
+             :key="'orbit-' + i"
+             :id="'orbit-' + i"
              :cx="center"
              :cy="center"
-             :rx="radiusStep * (1 + 1) * orbit_radius_ratio[1]"
-             :ry="radiusStep * (1 + 1)"
+             :rx="radiusStep * (i + 1) * orbit_radius_ratio[i]"
+             :ry="radiusStep * (i + 1)"
              :transform="`rotate(45 ${center} ${center})`"/>
 
     <!-- Electrons -->
-    <circle class="electron"
-            id="cazzone1"
-            :key="'e-' + 1 + '-' + 1"
-            :cx="center"
-            :cy="center"/>
+    <template v-for="(electronCount, orbitIndex) in orbits"
+      :key="'electrons-' + orbitIndex">
+      <circle v-for="electronIndex in electronCount"
+              :key="'e-' + orbitIndex + '-' + electronIndex"
+              :id="'electron-' + orbitIndex + '-' + electronIndex"
+              class="electron"
+              :cx="center"
+              :cy="center"/>
+    </template>
+
 
     <!-- Nucleus: Alternating protons (red) and neutrons (gray) -->
      <circle class="proton"
@@ -31,6 +38,8 @@ import { onSlideEnter, onSlideLeave } from '@slidev/client'
 gsap.registerPlugin(MotionPathPlugin)
 
 const props = defineProps({
+  orbits: { type: Array, default: () => [2, 3] },
+  speeds: { type: Array, default: () => [6, 4] },
   orbit_radius_ratio: { type: Array, default: () => [1, 1.5] },
   size: { type: Number, default: 200 },
 })
@@ -42,8 +51,8 @@ const viewBox = `0 0 ${props.size} ${props.size}`
 let ctx;
 onSlideEnter(() => {
     ctx = gsap.context(() => {
-        let orbitPath = MotionPathPlugin.convertToPath("#succhiale1")[0];
-        gsap.to(".electron", {
+        let orbitPath = MotionPathPlugin.convertToPath("#orbit-1")[0];
+        gsap.to("#electron-1-1", {
             motionPath: {
                 path: orbitPath,
                 align: orbitPath,
