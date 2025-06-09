@@ -1,4 +1,4 @@
-<template>
+<template view-transition-name: none>
   <img src="/images/EPFL_Logo.svg" class="absolute bottom-0 left-0 w-[10%] m-8" />
   <div class="absolute bottom-0 left-0 h-1 bg-epfl transition-all duration-700 ease-in-out"
        :style="{ width: ($nav.currentPage - 1) / ($nav.total - 1) * 100 + '%' }"></div>
@@ -9,3 +9,7 @@
     {{ $nav.currentPage }}
   </div>
 </template>
+
+<script setup>
+
+</script>
