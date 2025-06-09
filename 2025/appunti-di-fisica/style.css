@@ -2,3 +2,10 @@
 :root::view-transition-group(*) {
   animation-duration: 1.5s;          /* ← make it 3× slower */
 }
+
+.static-vt { view-transition-name: disabled; }
+::view-transition-group(disabled),
+::view-transition-old(disabled),
+::view-transition-new(disabled) { 
+  animation-duration: 0s !important;
+}
