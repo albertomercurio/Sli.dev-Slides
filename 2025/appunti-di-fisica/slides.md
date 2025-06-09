@@ -1,7 +1,7 @@
 ---
 # You can also start simply with 'default'
 theme: default
-title: Engineering and Exploring Ultrastrong and Superstrong Coupling Regimes in Quantum Electrodynamics
+title: Exploring Ultrastrong and Superstrong Coupling Regimes in Quantum Electrodynamics
 # https://sli.dev/features/drawing
 drawings:
   persist: false
@@ -19,7 +19,7 @@ layout: center
 # image: /images/vincent_circuit.png
 class: h-full flex flex-col text-center
 ---
-## **Engineering and Exploring Ultrastrong and Superstrong Coupling Regimes in Quantum Electrodynamics**
+## **Exploring Ultrastrong and Superstrong Coupling Regimes in Quantum Electrodynamics**
 
 <hr class="w-full my-6 border-epfl" />
 
@@ -31,6 +31,8 @@ layout: center
 ---
 
 # Ciaone
+
+<BohrAtom />
 
 ---
 transition: view-transition
