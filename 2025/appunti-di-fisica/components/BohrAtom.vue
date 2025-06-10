@@ -1,8 +1,11 @@
 <template>
     <svg ref="rootRef" :width="size" :height="size" :viewBox="viewBox">
+        <!-- Nucleus: Alternating protons (red) and neutrons (gray) -->
+        <circle v-for="(pos, i) in [...nucleusLayout].reverse()" :key="'nucleon-' + i" :cx="pos[0]" :cy="pos[1]"
+            :r="nucleonRadius" :class="i % 2 === 0 ? 'nucleon proton' : 'nucleon neutron'" />
+
         <!-- Orbits -->
         <ellipse v-for="(count, i) in orbits" class="orbit" 
-            :ref="el => orbitsList[i] = el"
             :key="'orbit-' + i"
             :cx="center"
             :cy="center"
@@ -12,14 +15,9 @@
         <!-- Electrons: Grouped by orbit -->
         <template v-for="(electronCount, orbitIndex) in orbits" :key="'electron-group-' + orbitIndex">
             <circle v-for="n in electronCount"
-                :ref="el => electronsList[orbitIndex][n - 1] = el"
                 :key="'e-' + orbitIndex + '-' + n"
                 :class="`electron-group-${orbitIndex} electron`" :cx="center" :cy="center" r="4" />
         </template>
-
-        <!-- Nucleus: Alternating protons (red) and neutrons (gray) -->
-        <circle v-for="(pos, i) in [...nucleusLayout].reverse()" :key="'nucleon-' + i" :cx="pos[0]" :cy="pos[1]"
-            :r="nucleonRadius" :class="i % 2 === 0 ? 'nucleon proton' : 'nucleon neutron'" />
     </svg>
 </template>
 
@@ -62,10 +60,22 @@ onSlideEnter(() => {
         console.error("Component not yet mounted!");
         return;
     }
+    populateOrbitsList(rootRef.value);
+    populateElectronsList(rootRef.value, orbitsList.value);
+    startAnimation();
+})
+
+onSlideLeave(() => {
+    stopAnimation();
+})
+
+function startAnimation() {
     ctx.value = gsap.context(() => {
-        electronsList.value.forEach((electrons, orbitIndex) => {
-            const orbitElement = orbitsList.value[orbitIndex];
+        const orbits = rootRef.value.querySelectorAll('.orbit');
+        // const orbits = orbitsList.value;
+        orbits.forEach((orbitElement, orbitIndex) => {
             const orbitPath = MotionPathPlugin.convertToPath(orbitElement)[0];
+            const electrons = electronsList.value[orbitIndex];
 
             gsap.to(electrons, {
                 motionPath: (i, target) => ({
@@ -75,17 +85,29 @@ onSlideEnter(() => {
                     start: i / electrons.length,
                     end: (i / electrons.length) + 1,
                 }),
-                duration: props.speeds[orbitIndex] || 5,
+                duration: props.speeds[orbitIndex],
                 repeat: -1,
                 ease: "linear",
             });
         });
-    }); // Scope the context to the component's root element
-})
+    });
+}
 
-onSlideLeave(() => {
-    ctx.value?.revert()
-})
+function stopAnimation() {
+    ctx.value?.revert();
+}
+
+function populateOrbitsList(rootRef) {
+    orbitsList.value = Array.from(rootRef.querySelectorAll('.orbit'));
+}
+
+function populateElectronsList(rootRef, orbitsList) {
+    orbitsList.forEach((_, orbitIndex) => {
+        const electrons = rootRef.querySelectorAll(`.electron-group-${orbitIndex}`);
+        electronsList.value[orbitIndex] = Array.from(electrons);
+    });
+}
+    
 
 function generatePackedNucleusAlternating(total) {
     let overlapFactor = 1.6

@@ -3,7 +3,6 @@
 theme: default
 title: Exploring Ultrastrong and Superstrong Coupling Regimes in Quantum Electrodynamics
 # https://sli.dev/features/drawing
-preload: false
 # slide transition: https://sli.dev/guide/animations.html#slide-transitions
 transition: fade-out
 # enable MDC Syntax: https://sli.dev/features/mdc
