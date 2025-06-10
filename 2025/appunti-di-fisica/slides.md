@@ -3,8 +3,7 @@
 theme: default
 title: Exploring Ultrastrong and Superstrong Coupling Regimes in Quantum Electrodynamics
 # https://sli.dev/features/drawing
-drawings:
-  persist: false
+preload: false
 # slide transition: https://sli.dev/guide/animations.html#slide-transitions
 transition: fade-out
 # enable MDC Syntax: https://sli.dev/features/mdc
@@ -37,45 +36,8 @@ layout: center
 transition: fade-out
 ---
 
-<BohrAtom ref="rootRef" class="my-atom" />
+<BohrAtom />
 
-<script setup>
-
-import { ref, nextTick } from 'vue'
-import { onSlideEnter, onSlideLeave } from '@slidev/client'
-import { gsap } from 'gsap';
-
-const rootRef = ref(null);
-
-let ctx
-onSlideEnter(() => {
-  ctx = gsap.context(async () => {
-    await nextTick();
-    console.log(rootRef.value.ctx);
-    // const someGroup = rootRef.value.ctx.selector(".orbit");
-    // const someGroup = gsap.getTweensOf(".electron-group-1");
-    // console.log(someGroup);
-    // let tweens = gsap.getTweensOf(someGroup[0]);
-    // tweens[0].pause(tweens[0].time());
-    // gsap.delayedCall(1.5, () => {
-    //   tweens[0].pause(tweens[0].time());
-    // });
-    gsap.to(".my-atom", {
-      duration: 2,
-      x: 100,
-      rotation: 360,
-      ease: "power1.inOut",
-      repeat: -1,
-      yoyo: true,
-    });
-  }, rootRef.value);
-});
-
-onSlideLeave(() => {
-  ctx.revert();
-});
-
-</script>
 
 ---
 transition: fade-out
