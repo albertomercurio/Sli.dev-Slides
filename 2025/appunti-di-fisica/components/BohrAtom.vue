@@ -50,7 +50,7 @@ onSlideEnter(() => {
     // Ensure the DOM is updated before accessing rootRef
     // Usually this only happens if this component is mounted in the first rendered slide
     if (!rootRef.value) {
-        console.error("Component not already mounted!");
+        console.error("Component not yet mounted!");
         return;
     }
     ctx.value = gsap.context(() => {
