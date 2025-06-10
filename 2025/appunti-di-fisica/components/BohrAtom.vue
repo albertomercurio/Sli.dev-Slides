@@ -7,13 +7,13 @@
 
         <!-- Electrons: Grouped by orbit -->
         <template v-for="(electronCount, orbitIndex) in orbits" :key="'electron-group-' + orbitIndex">
-            <circle v-for="n in electronCount" :key="'e-' + orbitIndex + '-' + n" :class="`electron-group-${orbitIndex} electron`" :cx="center"
-                :cy="center" />
+            <circle v-for="n in electronCount" :key="'e-' + orbitIndex + '-' + n"
+                :class="`electron-group-${orbitIndex} electron`" :cx="center" :cy="center" r="4" />
         </template>
 
         <!-- Nucleus: Alternating protons (red) and neutrons (gray) -->
         <circle v-for="(pos, i) in [...nucleusLayout].reverse()" :key="'nucleon-' + i" :cx="pos[0]" :cy="pos[1]"
-            :class="i % 2 === 0 ? 'nucleon proton' : 'nucleon neutron'" />
+            :r="nucleonRadius" :class="i % 2 === 0 ? 'nucleon proton' : 'nucleon neutron'" />
     </svg>
 </template>
 
@@ -120,11 +120,9 @@ function generatePackedNucleusAlternating(total) {
 
 .electron {
     fill: #1e90ff;
-    r: 4;
 }
 
 .nucleon {
-    r: v-bind(nucleonRadius);
     stroke: black;
     stroke-width: 0.5;
 }
