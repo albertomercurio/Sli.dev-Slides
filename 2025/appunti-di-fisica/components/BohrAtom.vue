@@ -9,7 +9,7 @@
             :key="'orbit-' + i"
             :cx="center"
             :cy="center"
-            :rx="radiusStep * (i + 1) * orbit_radius_ratio[i]" :ry="radiusStep * (i + 1)"
+            :rx="radiusStep * (i + 1) * orbitRadiusRatio[i]" :ry="radiusStep * (i + 1)"
             :transform="`rotate(45 ${center} ${center})`" />
 
         <!-- Electrons: Grouped by orbit -->
@@ -32,9 +32,10 @@ gsap.registerPlugin(MotionPathPlugin)
 const props = defineProps({
     orbits: { type: Array, default: () => [2, 3] },
     speeds: { type: Array, default: () => [4, 2] },
-    orbit_radius_ratio: { type: Array, default: () => [1, 1.5] },
+    orbitRadiusRatio: { type: Array, default: () => [1, 1.5] },
     totalNucleons: { type: Number, default: 7 }, // Total protons + neutrons
     size: { type: Number, default: 200 },
+    enableAnimation: { type: Boolean, default: true },
 })
 
 const center = props.size / 2
@@ -62,6 +63,7 @@ onSlideEnter(() => {
     }
     populateOrbitsList(rootRef.value);
     populateElectronsList(rootRef.value, orbitsList.value);
+    if (!props.enableAnimation) return;
     startAnimation();
 })
 

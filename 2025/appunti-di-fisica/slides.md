@@ -35,7 +35,7 @@ layout: center
 transition: fade-out
 ---
 
-<BohrAtom />
+<BohrAtom :enableAnimation="false" />
 
 
 ---
