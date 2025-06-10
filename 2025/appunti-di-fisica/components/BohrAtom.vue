@@ -6,11 +6,10 @@
             :transform="`rotate(45 ${center} ${center})`" />
 
         <!-- Electrons: Grouped by orbit -->
-        <g v-for="(electronCount, orbitIndex) in orbits" :key="'electron-group-' + orbitIndex"
-            :class="`electron-group-${orbitIndex}`">
-            <circle v-for="n in electronCount" :key="'e-' + orbitIndex + '-' + n" class="electron" :cx="center"
+        <template v-for="(electronCount, orbitIndex) in orbits" :key="'electron-group-' + orbitIndex">
+            <circle v-for="n in electronCount" :key="'e-' + orbitIndex + '-' + n" :class="`electron-group-${orbitIndex} electron`" :cx="center"
                 :cy="center" />
-        </g>
+        </template>
 
         <!-- Nucleus: Alternating protons (red) and neutrons (gray) -->
         <circle v-for="(pos, i) in [...nucleusLayout].reverse()" :key="'nucleon-' + i" :cx="pos[0]" :cy="pos[1]"
@@ -19,7 +18,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick } from 'vue'
+import { ref } from 'vue'
 import { gsap } from 'gsap'
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin'
 import { onSlideEnter, onSlideLeave } from '@slidev/client'
@@ -41,18 +40,27 @@ const nucleonRadius = 4
 const nucleusLayout = generatePackedNucleusAlternating(props.totalNucleons)
 
 const rootRef = ref(null);
+const ctx = ref(null);
 
-let ctx;
-onSlideEnter(async () => {
-    await nextTick(); // Ensure the DOM is updated before accessing rootRef
-    ctx = gsap.context(() => {
+defineExpose({
+    ctx,
+})
+
+onSlideEnter(() => {
+    // Ensure the DOM is updated before accessing rootRef
+    // Usually this only happens if this component is mounted in the first rendered slide
+    if (!rootRef.value) {
+        console.error("Component not already mounted!");
+        return;
+    }
+    ctx.value = gsap.context(() => {
         const orbitElements = rootRef.value.querySelectorAll('.orbit');
 
         props.orbits.forEach((electronCount, orbitIndex) => {
             const orbitElement = orbitElements[orbitIndex];
-            const orbitPath = MotionPathPlugin.convertToPath(orbitElement)?.[0];
+            const orbitPath = MotionPathPlugin.convertToPath(orbitElement)[0];
 
-            const electronNodes = rootRef.value.querySelectorAll(`.electron-group-${orbitIndex} .electron`);
+            const electronNodes = rootRef.value.querySelectorAll(`.electron-group-${orbitIndex}`);
 
             electronNodes.forEach((electronNode, electronNodeIndex) => {
                 gsap.to(electronNode, {
@@ -73,7 +81,7 @@ onSlideEnter(async () => {
 })
 
 onSlideLeave(() => {
-    ctx.revert()
+    ctx.value.revert()
 })
 
 function generatePackedNucleusAlternating(total) {

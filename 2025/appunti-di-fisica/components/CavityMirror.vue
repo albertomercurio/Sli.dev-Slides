@@ -26,5 +26,11 @@ const props = defineProps({
 </script>
 
 <style scoped>
-svg { display: block; }       /* avoids extra whitespace */
+svg {
+  display: block;
+}
+
+.cavity-mirror {
+  stroke-width: 0;
+}
 </style>

@@ -6,7 +6,7 @@ title: Exploring Ultrastrong and Superstrong Coupling Regimes in Quantum Electro
 drawings:
   persist: false
 # slide transition: https://sli.dev/guide/animations.html#slide-transitions
-transition: view-transition
+transition: fade-out
 # enable MDC Syntax: https://sli.dev/features/mdc
 mdc: true
 # open graph
@@ -28,24 +28,57 @@ Alberto Mercurio
 <!-- Put BohrAtom component in the bottom-right -->
 <div class="absolute bottom-0 right-0 mr-16 mb-4 flex items-center gap-x-2">
 <CavityMirror />
-<BohrAtom view-transition-name="atomello" :size=150 />
+<BohrAtom :size=150 />
 <CavityMirror class="rotate-180" />
 </div>
 
 ---
 layout: center
-transition: view-transition
+transition: fade-out
 ---
 
-# Ciaone
+<BohrAtom ref="rootRef" class="my-atom" />
 
-Lorenzo suca <span view-transition-name="equation">$\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}$</span>
+<script setup>
 
-<BohrAtom view-transition-name="atomello" />
+import { ref, nextTick } from 'vue'
+import { onSlideEnter, onSlideLeave } from '@slidev/client'
+import { gsap } from 'gsap';
 
+const rootRef = ref(null);
+
+let ctx
+onSlideEnter(() => {
+  ctx = gsap.context(async () => {
+    await nextTick();
+    console.log(rootRef.value.ctx);
+    // const someGroup = rootRef.value.ctx.selector(".orbit");
+    // const someGroup = gsap.getTweensOf(".electron-group-1");
+    // console.log(someGroup);
+    // let tweens = gsap.getTweensOf(someGroup[0]);
+    // tweens[0].pause(tweens[0].time());
+    // gsap.delayedCall(1.5, () => {
+    //   tweens[0].pause(tweens[0].time());
+    // });
+    gsap.to(".my-atom", {
+      duration: 2,
+      x: 100,
+      rotation: 360,
+      ease: "power1.inOut",
+      repeat: -1,
+      yoyo: true,
+    });
+  }, rootRef.value);
+});
+
+onSlideLeave(() => {
+  ctx.revert();
+});
+
+</script>
 
 ---
-transition: view-transition
+transition: fade-out
 ---
 
 # View Transition {.inline-block.view-transition-title}
@@ -54,7 +87,7 @@ transition: view-transition
 
 <span view-transition-name="equation">$\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}$</span>
 
-<BohrAtom view-transition-name="atomello" />
+<BohrAtom />
 
 
 ---

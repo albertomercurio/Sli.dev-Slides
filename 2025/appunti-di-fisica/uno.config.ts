@@ -7,7 +7,7 @@ export default defineConfig({
   },
   theme: {
     colors: {
-      epfl: '#ff0000',     // your custom red
+      epfl: '#e30613',     // your custom red
     },
   },
 })
