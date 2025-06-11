@@ -50,6 +50,7 @@ const electronsList = ref(props.orbits.map(() => []));
 const ctx = ref(null);
 
 defineExpose({
+    rootRef,
     orbitsList,
     electronsList,
     startAnimation,

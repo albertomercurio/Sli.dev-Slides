@@ -25,35 +25,68 @@ layout: center
 transition: fade-out
 ---
 
-<BohrAtom ref="atomRef" />
+  
+<BohrAtom ref="atomRef" class="my-atom" />
+<div ref="photonRef" class="absolute w-3 h-3 rounded-full bg-yellow-400 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2" />
 
 <script setup>
 
 import { ref } from 'vue';
 import { onSlideEnter, onSlideLeave } from '@slidev/client';
 import { gsap } from 'gsap';
+import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
+
+gsap.registerPlugin(MotionPathPlugin);
 
 const atomRef = ref(null);
-const ctx = ref(null);
+const photonRef = ref(null);
 
+const timeline = gsap.timeline({pause: true});
 onSlideEnter(() => {
-  if (!atomRef.value) {
-    console.warn('BohrAtom component not found');
+  if (!atomRef.value || !photonRef.value) {
+    console.warn('BohrAtom or photon element not found');
     return;
   }
-  ctx.value = gsap.context(() => {
-    const tweens = gsap.getTweensOf(atomRef.value.electronsList[0][1]);
-    console.log('Tweens:', tweens);
-    gsap.delayedCall(2, () => {
-      tweens[0].pause();
-    });
+
+  const svgEl = atomRef.value.rootRef;
+
+  const electron = atomRef.value.electronsList[0][1] // Choose electron 1 on orbit 0
+  const targetOrbit = atomRef.value.orbitsList[1]     // Orbit 1
+  const oldOrbit = atomRef.value.orbitsList[0]
+
+  const oldPath = MotionPathPlugin.convertToPath(oldOrbit)[0]
+  const newPath = MotionPathPlugin.convertToPath(targetOrbit)[0]
+
+  const electronTweens = gsap.getTweensOf(electron)
+  if (electronTweens.length === 0) {
+    console.warn('No tweens found for the electron');
+    return;
+  }
+
+  const electronTween = electronTweens[0];
+  console.log('Electron Tween:', electronTween);
+
+  gsap.set(photonRef.value, {
+    x: -200,
+    y: gsap.getProperty(electron, 'y'),
+    opacity: 0
   });
-  // console.log('Slide entered');
+
+  timeline.to(svgEl, {
+    x: 200,
+    duration: 2,
+    delay: 1
+  });
+
+  timeline.play();
+
+  console.log('Slide entered');
 });
 
 onSlideLeave(() => {
   console.log('Slide left');
-  ctx.value.revert();
+  timeline.pause(0);
+  timeline.kill();
 });
 
 </script>
