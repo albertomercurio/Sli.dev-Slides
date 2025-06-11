@@ -1,30 +1,48 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+import { ref, computed } from 'vue'
+import Slide1 from '../slides/Slide1.vue'
+import Slide2 from '../slides/Slide2.vue'
+import Slide3 from '../slides/Slide3.vue'
+import Slide4 from '../slides/Slide4.vue'
+
+const slides = [Slide1, Slide2, Slide3, Slide4]
+const currentSlideIndex = ref(0)
+
+const currentSlide = computed(() => slides[currentSlideIndex.value])
+
+function nextSlide() {
+  if (currentSlideIndex.value < slides.length - 1) {
+    currentSlideIndex.value++
+  }
+}
+
+function prevSlide() {
+  if (currentSlideIndex.value > 0) {
+    currentSlideIndex.value--
+  }
+}
 </script>
 
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+  <main>
+    <component :is="currentSlide" />
+    <div class="navigation">
+      <button @click="prevSlide">Previous</button>
+      <button @click="nextSlide">Next</button>
+    </div>
+  </main>
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<style>
+main {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+.navigation {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 </style>
