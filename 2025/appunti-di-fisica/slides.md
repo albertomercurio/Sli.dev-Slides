@@ -41,7 +41,8 @@ gsap.registerPlugin(MotionPathPlugin);
 const atomRef = ref(null);
 const photonRef = ref(null);
 
-const timeline = gsap.timeline({pause: true});
+// const timeline = gsap.timeline({pause: true});
+const ctx = gsap.context(() => {});
 onSlideEnter(() => {
   if (!atomRef.value || !photonRef.value) {
     console.warn('BohrAtom or photon element not found');
@@ -66,27 +67,27 @@ onSlideEnter(() => {
   const electronTween = electronTweens[0];
   console.log('Electron Tween:', electronTween);
 
-  gsap.set(photonRef.value, {
-    x: -200,
-    y: gsap.getProperty(electron, 'y'),
-    opacity: 0
-  });
+  ctx.add(() => {
+    let timeline = gsap.timeline();
+    gsap.set(photonRef.value, {
+      x: -200,
+      y: gsap.getProperty(electron, 'y'),
+      opacity: 0
+    });
 
-  timeline.to(svgEl, {
-    x: 200,
-    duration: 2,
-    delay: 1
+    timeline.to(svgEl, {
+      x: 200,
+      duration: 2,
+      delay: 1
+    });
   });
-
-  timeline.play();
 
   console.log('Slide entered');
 });
 
 onSlideLeave(() => {
   console.log('Slide left');
-  timeline.pause(0);
-  timeline.kill();
+  ctx.revert();
 });
 
 </script>
