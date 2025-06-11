@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import Slide1 from '../slides/Slide1.vue'
 import Slide2 from '../slides/Slide2.vue'
 import Slide3 from '../slides/Slide3.vue'
@@ -21,28 +21,41 @@ function prevSlide() {
     currentSlideIndex.value--
   }
 }
+
+// --- Keyboard Navigation ---
+function handleKeydown(event) {
+  if (event.key === 'ArrowRight' || event.key === ' ') {
+    nextSlide()
+  } else if (event.key === 'ArrowLeft') {
+    prevSlide()
+  }
+}
+
+// Add and remove the event listener to avoid memory leaks
+onMounted(() => {
+  window.addEventListener('keydown', handleKeydown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeydown)
+})
 </script>
 
 <template>
-  <main>
+  <Transition name="fade" mode="out-in">
     <component :is="currentSlide" />
-    <div class="navigation">
-      <button @click="prevSlide">Previous</button>
-      <button @click="nextSlide">Next</button>
-    </div>
-  </main>
+  </Transition>
 </template>
 
 <style>
-main {
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
+/* --- Smooth Fade Transition --- */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
 }
-.navigation {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
