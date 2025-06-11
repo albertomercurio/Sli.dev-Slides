@@ -1,20 +1,10 @@
 ---
-# You can also start simply with 'default'
 theme: default
 title: Exploring Ultrastrong and Superstrong Coupling Regimes in Quantum Electrodynamics
-# https://sli.dev/features/drawing
-# slide transition: https://sli.dev/guide/animations.html#slide-transitions
 transition: fade-out
-# enable MDC Syntax: https://sli.dev/features/mdc
 mdc: true
-# open graph
-# seoMeta:
-#  ogImage: https://cover.sli.dev
-# layout: image-left
-# image: assets/vincent_circuit.png
 author: Alberto Mercurio
 layout: center
-# image: /images/vincent_circuit.png
 class: h-full flex flex-col text-center
 ---
 ## **Exploring Ultrastrong and Superstrong Coupling Regimes in Quantum Electrodynamics**
@@ -35,7 +25,39 @@ layout: center
 transition: fade-out
 ---
 
-<BohrAtom :enableAnimation="false" />
+<BohrAtom ref="atomRef" :enableAnimation="false" />
+
+<script setup>
+
+import { ref } from 'vue';
+import { onSlideEnter, onSlideLeave } from '@slidev/client';
+import { gsap } from 'gsap';
+
+const atomRef = ref(null);
+const ctx = ref(null);
+
+onSlideEnter(() => {
+  if (!atomRef.value) {
+    console.warn('BohrAtom component not found');
+    return;
+  }
+  ctx.value = gsap.context(() => {
+    atomRef.value.startAnimation(atomRef.value.orbitsList, atomRef.value.electronsList);
+    const tweens = gsap.getTweensOf(atomRef.value.electronsList[0][1]);
+    console.log('Tweens:', tweens);
+    // gsap.delayedCall(2, () => {
+    //   tweens[0].pause();
+    // });
+  });
+  // console.log('Slide entered');
+});
+
+onSlideLeave(() => {
+  console.log('Slide left');
+  ctx.value.revert();
+});
+
+</script>
 
 
 ---

@@ -52,6 +52,7 @@ const ctx = ref(null);
 defineExpose({
     orbitsList,
     electronsList,
+    startAnimation,
 })
 
 onSlideEnter(() => {
@@ -64,33 +65,35 @@ onSlideEnter(() => {
     populateOrbitsList(rootRef.value);
     populateElectronsList(rootRef.value, orbitsList.value);
     if (!props.enableAnimation) return;
-    startAnimation();
+    startAnimationContext(orbitsList.value, electronsList.value);
 })
 
 onSlideLeave(() => {
     stopAnimation();
 })
 
-function startAnimation() {
+function startAnimationContext(orbitsList, electronsList) {
     ctx.value = gsap.context(() => {
-        const orbits = rootRef.value.querySelectorAll('.orbit');
-        // const orbits = orbitsList.value;
-        orbits.forEach((orbitElement, orbitIndex) => {
-            const orbitPath = MotionPathPlugin.convertToPath(orbitElement)[0];
-            const electrons = electronsList.value[orbitIndex];
+        startAnimation(orbitsList, electronsList);
+    });
+}
 
-            gsap.to(electrons, {
-                motionPath: (i, target) => ({
-                    path: orbitPath,
-                    align: orbitPath,
-                    alignOrigin: [0.5, 0.5],
-                    start: i / electrons.length,
-                    end: (i / electrons.length) + 1,
-                }),
-                duration: props.speeds[orbitIndex],
-                repeat: -1,
-                ease: "linear",
-            });
+function startAnimation(orbitsList, electronsList) {
+    orbitsList.forEach((orbitElement, orbitIndex) => {
+        const orbitPath = MotionPathPlugin.convertToPath(orbitElement)[0];
+        const electrons = electronsList[orbitIndex];
+
+        gsap.to(electrons, {
+            motionPath: (i, target) => ({
+                path: orbitPath,
+                align: orbitPath,
+                alignOrigin: [0.5, 0.5],
+                start: i / electrons.length,
+                end: (i / electrons.length) + 1,
+            }),
+            duration: props.speeds[orbitIndex],
+            repeat: -1,
+            ease: "linear",
         });
     });
 }
@@ -99,6 +102,8 @@ function stopAnimation() {
     ctx.value?.revert();
 }
 
+// Populate the orbits and electrons lists based on the SVG structure at runtime
+// This avoids possible conflicts
 function populateOrbitsList(rootRef) {
     orbitsList.value = Array.from(rootRef.querySelectorAll('.orbit'));
 }
