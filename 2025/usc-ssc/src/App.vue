@@ -1,8 +1,8 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import Slide1 from '../slides/Slide1.vue'
-import Slide2 from '../slides/Slide2.vue'
-import Slide3 from '../slides/Slide3.vue'
+import Slide1 from '../slides/Slide1.md'
+import Slide2 from '../slides/Slide2.md'
+import Slide3 from '../slides/Slide3.md'
 import Slide4 from '../slides/Slide4.vue'
 
 const slides = [Slide1, Slide2, Slide3, Slide4]
