@@ -25,7 +25,7 @@ layout: center
 transition: fade-out
 ---
 
-<BohrAtom ref="atomRef" :enableAnimation="false" />
+<BohrAtom ref="atomRef" />
 
 <script setup>
 
@@ -42,12 +42,11 @@ onSlideEnter(() => {
     return;
   }
   ctx.value = gsap.context(() => {
-    atomRef.value.startAnimation(atomRef.value.orbitsList, atomRef.value.electronsList);
     const tweens = gsap.getTweensOf(atomRef.value.electronsList[0][1]);
     console.log('Tweens:', tweens);
-    // gsap.delayedCall(2, () => {
-    //   tweens[0].pause();
-    // });
+    gsap.delayedCall(2, () => {
+      tweens[0].pause();
+    });
   });
   // console.log('Slide entered');
 });

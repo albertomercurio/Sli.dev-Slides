@@ -59,7 +59,7 @@ onSlideEnter(() => {
     // Ensure the DOM is updated before accessing rootRef
     // Usually this only happens if this component is mounted in the first rendered slide
     if (!rootRef.value) {
-        console.error("Component not yet mounted!");
+        console.warn("Component not yet mounted!");
         return;
     }
     populateOrbitsList(rootRef.value);
@@ -83,17 +83,19 @@ function startAnimation(orbitsList, electronsList) {
         const orbitPath = MotionPathPlugin.convertToPath(orbitElement)[0];
         const electrons = electronsList[orbitIndex];
 
-        gsap.to(electrons, {
-            motionPath: (i, target) => ({
-                path: orbitPath,
-                align: orbitPath,
-                alignOrigin: [0.5, 0.5],
-                start: i / electrons.length,
-                end: (i / electrons.length) + 1,
-            }),
-            duration: props.speeds[orbitIndex],
-            repeat: -1,
-            ease: "linear",
+        electrons.forEach((electron, electronIndex) => {
+            gsap.to(electron, {
+                motionPath: {
+                    path: orbitPath,
+                    align: orbitPath,
+                    alignOrigin: [0.5, 0.5],
+                    start: electronIndex / electrons.length,
+                    end: (electronIndex / electrons.length) + 1,
+                },
+                duration: props.speeds[orbitIndex],
+                repeat: -1,
+                ease: "linear",
+            });
         });
     });
 }
