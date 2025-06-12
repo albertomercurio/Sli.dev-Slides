@@ -1,26 +1,52 @@
+// src/components/Latex.vue
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, watch, onMounted, computed } from 'vue'
 import katex from 'katex'
-import 'katex/dist/katex.min.css'
 
 const props = defineProps({
-  expression: String
+  // The LaTeX expression to render
+  expression: {
+    type: String,
+    required: true
+  },
+  // A prop to control inline vs. display mode
+  display: {
+    type: Boolean,
+    default: false
+  }
 })
 
-const latexContainer = ref(null)
+const element = ref(null)
 
-const renderLatex = () => {
-  if (latexContainer.value) {
-    katex.render(props.expression, latexContainer.value, {
-      throwOnError: false
+// A computed property to select the correct HTML tag
+const tag = computed(() => props.display ? 'div' : 'span')
+
+const render = () => {
+  if (element.value) {
+    katex.render(props.expression, element.value, {
+      throwOnError: false,
+      displayMode: props.display // Use the prop to set KaTeX's displayMode
     })
   }
 }
 
-onMounted(renderLatex)
-watch(() => props.expression, renderLatex)
+// Render when the component is mounted and whenever the expression changes
+onMounted(render)
+watch(() => props.expression, render)
 </script>
 
 <template>
-  <div ref="latexContainer"></div>
+  <component :is="tag" ref="element" />
 </template>
+
+<style>
+/*
+  Since we are back in a controlled Vue environment, the CSS conflicts
+  should be gone. These are base styles for good presentation.
+*/
+.katex-display {
+  /* Add some margin to block-level equations for spacing */
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+</style>

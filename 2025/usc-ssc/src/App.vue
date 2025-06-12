@@ -1,11 +1,17 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import Slide1 from '../slides/Slide1.md'
-import Slide2 from '../slides/Slide2.md'
-import Slide3 from '../slides/Slide3.md'
-import Slide4 from '../slides/Slide4.vue'
 
-const slides = [Slide1, Slide2, Slide3, Slide4]
+// import Slide1 from '../slides/Slide1.md'
+// import Slide2 from '../slides/Slide2.md'
+// import Slide3 from '../slides/Slide3.md'
+// import Slide4 from '../slides/Slide4.vue'
+
+// const slides = [Slide1, Slide2, Slide3, Slide4]
+
+// Dynamically import all .vue files from the slides directory
+const modules = import.meta.glob('../slides/*.vue', { eager: true })
+const slides = Object.values(modules).map(module => module.default)
+
 const currentSlideIndex = ref(0)
 
 const currentSlide = computed(() => slides[currentSlideIndex.value])
