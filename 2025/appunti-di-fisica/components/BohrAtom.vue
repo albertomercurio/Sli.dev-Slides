@@ -9,8 +9,7 @@
             :key="'orbit-' + i"
             :cx="center"
             :cy="center"
-            :rx="radiusStep * (i + 1) * orbitRadiusRatio[i]" :ry="radiusStep * (i + 1)"
-            :transform="`rotate(45 ${center} ${center})`" />
+            :rx="radiusStep * (i + 1) * orbitRadiusRatio[i]" :ry="radiusStep * (i + 1)" />
 
         <!-- Electrons: Grouped by orbit -->
         <template v-for="(electronCount, orbitIndex) in orbits" :key="'electron-group-' + orbitIndex">
@@ -47,7 +46,7 @@ const nucleusLayout = generatePackedNucleusAlternating(props.totalNucleons)
 const rootRef = ref(null);
 const orbitsList = ref([]);
 const electronsList = ref(props.orbits.map(() => []));
-const ctx = ref(null);
+const ctx = gsap.context(() => {});
 
 defineExpose({
     rootRef,
@@ -74,14 +73,18 @@ onSlideLeave(() => {
 })
 
 function startAnimationContext(orbitsList, electronsList) {
-    ctx.value = gsap.context(() => {
+    ctx.add(() => {
         startAnimation(orbitsList, electronsList);
-    });
+    }, rootRef.value);
 }
 
 function startAnimation(orbitsList, electronsList) {
+    gsap.set(orbitsList, {
+            rotation: 50,
+            transformOrigin: "50% 50%",
+    });
     orbitsList.forEach((orbitElement, orbitIndex) => {
-        const orbitPath = MotionPathPlugin.convertToPath(orbitElement)[0];
+        const [orbitPath] = MotionPathPlugin.convertToPath(orbitElement);
         const electrons = electronsList[orbitIndex];
 
         electrons.forEach((electron, electronIndex) => {
@@ -102,7 +105,7 @@ function startAnimation(orbitsList, electronsList) {
 }
 
 function stopAnimation() {
-    ctx.value?.revert();
+    ctx.revert();
 }
 
 // Populate the orbits and electrons lists based on the SVG structure at runtime
@@ -117,7 +120,6 @@ function populateElectronsList(rootRef, orbitsList) {
         electronsList.value[orbitIndex] = Array.from(electrons);
     });
 }
-    
 
 function generatePackedNucleusAlternating(total) {
     let overlapFactor = 1.6

@@ -49,7 +49,8 @@ onSlideEnter(() => {
     return;
   }
 
-  const svgEl = atomRef.value.rootRef;
+  const svg = atomRef.value.rootRef;
+  const photon = photonRef.value;
 
   const electron = atomRef.value.electronsList[0][1] // Choose electron 1 on orbit 0
   const targetOrbit = atomRef.value.orbitsList[1]     // Orbit 1
@@ -69,16 +70,53 @@ onSlideEnter(() => {
 
   ctx.add(() => {
     let timeline = gsap.timeline();
-    gsap.set(photonRef.value, {
+    gsap.set(photon, {
       x: -200,
       y: gsap.getProperty(electron, 'y'),
       opacity: 0
     });
 
-    timeline.to(svgEl, {
+    timeline.to(svg, {
       x: 200,
       duration: 2,
       delay: 1
+    });
+
+    timeline.to(photon, {
+      opacity: 1,
+      duration: 1,
+    }, '>');
+
+    timeline.to(photon, {
+      scale: 1.5,
+      duration: 0.5,
+      repeat: -1,
+      yoyo: true,
+      ease: 'power1.inOut',
+    }, '<');
+
+    timeline.to(photon, {
+      x: () => gsap.getProperty(svg, 'x'),
+      y: () => gsap.getProperty(svg, 'y'),
+      duration: 1,
+      ease: 'power1.inOut',
+    });
+
+    timeline.to(photon, {
+      opacity: 0,
+      duration: 1,
+    });
+
+    timeline.call(() => {
+      electronTween.pause();
+    });
+
+    timeline.to(electron, {
+      scale: 1.5,
+      fill: '#822433',
+      duration: 0.5,
+      yoyo: true,
+      repeat: 1,
     });
   });
 
