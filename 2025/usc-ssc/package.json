@@ -11,11 +11,14 @@
   "dependencies": {
     "gsap": "^3.13.0",
     "katex": "^0.16.22",
+    "markdown-it-anchor": "^9.2.0",
     "prismjs": "^1.30.0",
+    "unplugin-vue-markdown": "^28.3.1",
     "vue": "^3.5.13",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "@shikijs/markdown-it": "^3.6.0",
     "@unocss/preset-wind3": "^66.1.4",
     "@unocss/vite": "^66.1.4",
     "@vitejs/plugin-vue": "^5.2.3",

@@ -1,5 +1,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import PresentationCanvas from './components/PresentationCanvas.vue'
+import GlobalFrame from './components/GlobalFrame.vue'
 
 // import Slide1 from '../slides/Slide1.md'
 // import Slide2 from '../slides/Slide2.md'
@@ -9,8 +11,12 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 // const slides = [Slide1, Slide2, Slide3, Slide4]
 
 // Dynamically import all .vue files from the slides directory
-const modules = import.meta.glob('../slides/*.vue', { eager: true })
-const slides = Object.values(modules).map(module => module.default)
+const vueModules = import.meta.glob('../slides/*.vue', { eager: true })
+const mdModules = import.meta.glob('../slides/*.md', { eager: true })
+const slides = [
+  ...Object.values(vueModules).map(module => module.default),
+  ...Object.values(mdModules).map(module => module.default)
+]
 
 const currentSlideIndex = ref(0)
 
@@ -48,9 +54,13 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <Transition name="fade" mode="out-in">
-    <component :is="currentSlide" />
-  </Transition>
+  <PresentationCanvas>
+    <Transition name="fade" mode="out-in">
+      <component :is="currentSlide" />
+    </Transition>
+
+    <GlobalFrame :current="currentSlideIndex" :total="slides.length" />
+  </PresentationCanvas>
 </template>
 
 <style>
