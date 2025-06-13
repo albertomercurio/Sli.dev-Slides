@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vueuse/core": "^13.3.0",
     "gsap": "^3.13.0",
     "katex": "^0.16.22",
     "markdown-it-anchor": "^9.2.0",

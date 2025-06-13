@@ -19,7 +19,7 @@
 
 <script setup>
 const props = defineProps({
-    size: { type: Number, default: 80 },
+    size: { type: Number, default: 45 },
     stroke: { type: String, default: '#1d1d1b' },
     fill: { type: String, default: '#a2a2a2' },
 })
