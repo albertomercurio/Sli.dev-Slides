@@ -29,8 +29,6 @@ const currentSlide = computed(() => slides[currentSlideIndex.value])
 function nextSlide() {
   const maxSteps = currentSlideRef.value?.maxSteps ?? 0
 
-  console.log("currentSlideStep: ", currentSlideStep.value, "maxSteps: ", maxSteps)
-
   if (currentSlideStep.value < maxSteps) {
     currentSlideStep.value++
     return
@@ -83,7 +81,7 @@ onUnmounted(() => {
     <SlideContainer>
       <Center>
         <Transition name="fade" mode="out-in">
-            <component :is="currentSlide" ref="currentSlideRef" />
+            <component ref="currentSlideRef" :is="currentSlide" :step="currentSlideStep" />
         </Transition>
       </Center>
 

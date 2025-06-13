@@ -69,7 +69,6 @@ onMounted(() => {
     console.warn('BohrAtom is not yet set')
     return
   }
-  console.log('BohrAtom mounted')
 
   ctx = gsap.context(() => {
     const orbits = gsap.utils.toArray<SVGEllipseElement>('.orbit')
@@ -185,6 +184,10 @@ function getOrbitRelativeDistance(
 
 .proton {
     fill: #dc3e2c;
+}
+
+.neutron {
+    fill: #555;
 }
 
 .orbit {

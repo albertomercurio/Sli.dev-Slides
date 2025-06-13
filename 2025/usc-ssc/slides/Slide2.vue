@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, watch } from "vue";
 import BohrAtom from "../src/components/BohrAtom.vue";
 import { gsap } from "gsap";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
@@ -16,8 +16,12 @@ const slideRef = ref();
 const atomRef = ref();
 const photonRef = ref(null);
 const ctx = gsap.context(() => {});
+const maxSteps = ref(4); // Maximum steps for the slide
 
-const maxSteps = ref(5); // Maximum steps for the slide
+const props = defineProps({
+  step: { type: Number, required: true }
+})
+
 defineExpose({
   maxSteps
 });
@@ -27,7 +31,19 @@ onMounted(() => {
     const atom = atomRef.value.rootRef;
     const photon = photonRef.value;
     const electron = gsap.utils.toArray(".electron")[0];
+    const orbit0 = gsap.utils.toArray(".orbit-0")[0];
     const orbit1 = gsap.utils.toArray(".orbit-1")[0];
+
+    const timeline = gsap.timeline({paused: true});
+
+    watch(() => props.step, newStep => {
+      const tweenOld = `step-${newStep-1}`
+      const tweenNew = `step-${newStep}`
+      // Use tweenTo for smooth forward *and* backward motion
+      if (newStep > 0) {
+        timeline.tweenFromTo(tweenOld, tweenNew);
+      }
+    });
 
     // Set initial position of the photon
     gsap.set(photon, {
@@ -36,7 +52,7 @@ onMounted(() => {
       opacity: 0
     });
 
-    const timeline = gsap.timeline();
+    timeline.addLabel("step-0")
 
     timeline.to(atom, {
         x: 200,
@@ -57,6 +73,8 @@ onMounted(() => {
       ease: 'power1.inOut',
     }, '<');
 
+    timeline.addLabel("step-1")
+
     timeline.to(photon, {
       x: () => gsap.getProperty(atom, 'x'),
       y: () => gsap.getProperty(atom, 'y'),
@@ -69,13 +87,14 @@ onMounted(() => {
       duration: 1,
     });
 
-    timeline.call(() => {
-        let electronTween = gsap.getTweensOf(".electron")[0];
-        electronTween.pause();
-    });
+    timeline.addLabel("step-2")
 
     timeline.to(electron, {
-      scale: 1.5,
+      onStart: () => {
+        let electronTween = gsap.getTweensOf(".electron-0-0")[0];
+        electronTween.kill();
+      },
+      scale: 2,
       fill: '#822433',
       duration: 0.5,
       yoyo: true,
@@ -84,25 +103,83 @@ onMounted(() => {
 
     timeline.to(electron, {
         attr: {
-            cx: () => "+=" + atomRef.value.getOrbitRelativeDistance(".electron", ".orbit-1", 0.1).x,
-            cy: () => "+=" + atomRef.value.getOrbitRelativeDistance(".electron", ".orbit-1", 0.1).y
+            cx: () => "+=" + atomRef.value.getOrbitRelativeDistance(".electron-0-0", ".orbit-1", 0.1).x,
+            cy: () => "+=" + atomRef.value.getOrbitRelativeDistance(".electron-0-0", ".orbit-1", 0.1).y
         },
         duration: 2,
         ease: "power1.inOut"
     });
 
-    timeline.to(electron, {
-      motionPath: {
-        path: orbit1,
-        align: orbit1,
-        alignOrigin: [0.5, 0.5],
-        start: 0.1,
-        end: 1.1,
-      },
-      duration: 2,
-      repeat: -1,
-      ease: "linear",
+    // Workaround to handle infinite loop in a timeline
+    timeline.to(".photon", {
+      x: "+=" + 0,
+      duration: 0.05,
     });
+    timeline.call(() => {
+      gsap.to(electron, {
+        motionPath: {
+          path: orbit1,
+          align: orbit1,
+          alignOrigin: [0.5, 0.5],
+          start: 0.1,
+          end: 1.1,
+        },
+        duration: 2,
+        repeat: -1,
+        ease: "linear",
+      });
+    });
+
+    timeline.addLabel("step-3")
+
+    timeline.to(electron, {
+      onStart: () => {
+        let electronTween = gsap.getTweensOf(".electron-0-0")[0];
+        electronTween.kill();
+      },
+      scale: 2,
+      fill: '#822433',
+      duration: 0.5,
+      yoyo: true,
+      repeat: 1,
+    });
+
+    timeline.to(electron, {
+        onStart: () => {
+            let electronTweens = gsap.getTweensOf(".electron-0-0");
+            let electronTween = electronTweens[electronTweens.length - 1];
+            electronTween.kill();
+        },
+        attr: {
+            cx: () => "+=" + atomRef.value.getOrbitRelativeDistance(".electron-0-0", ".orbit-0", 0.1).x,
+            cy: () => "+=" + atomRef.value.getOrbitRelativeDistance(".electron-0-0", ".orbit-0", 0.1).y
+        },
+        duration: 2,
+        ease: "power1.inOut",
+    });
+
+    // Workaround to handle infinite loop in a timeline
+    timeline.to(".photon", {
+      x: "+=" + 0,
+      duration: 0.05,
+    });
+    timeline.call(() => {
+      gsap.to(electron, {
+        motionPath: {
+          path: orbit0,
+          align: orbit0,
+          alignOrigin: [0.5, 0.5],
+          start: 0.1,
+          end: 1.1,
+        },
+        duration: 4,
+        repeat: -1,
+        ease: "linear",
+      });
+    });
+
+    timeline.addLabel("step-4");
+
     }, slideRef.value);
 });
 
