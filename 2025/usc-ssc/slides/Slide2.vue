@@ -60,27 +60,27 @@ onMounted(() => {
         ease: "power1.inOut"
     });
 
+    timeline.addLabel("step-1")
+
     timeline.to(photon, {
       opacity: 1,
       duration: 1,
     }, '>');
 
     timeline.to(photon, {
-      scale: 1.5,
+      scale: 2,
       duration: 0.5,
       repeat: -1,
       yoyo: true,
       ease: 'power1.inOut',
     }, '<');
 
-    timeline.addLabel("step-1")
-
     timeline.to(photon, {
       x: () => gsap.getProperty(atom, 'x'),
       y: () => gsap.getProperty(atom, 'y'),
       duration: 1,
       ease: 'power1.inOut',
-    }, '<+2');
+    }, '<+3');
 
     timeline.to(photon, {
       opacity: 0,

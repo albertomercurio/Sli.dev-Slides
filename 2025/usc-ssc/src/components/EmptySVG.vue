@@ -2,7 +2,7 @@
     <svg 
         :width="props.width"
         :height="props.height"
-        :viewBox="`0 0 ${props.width} ${props.height}`">
+        :viewBox="`0 ${-props.height / 2} ${props.width} ${props.height}`">
         <path ref="pathRef" fill="none" d="" />
     </svg>
 </template>

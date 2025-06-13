@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import CavityMirror from '../src/components/CavityMirror.vue'
 import EmptySVG from '../src/components/EmptySVG.vue'
 import { gsap } from 'gsap'
@@ -33,12 +33,29 @@ const modeSVGWidth = 432
 const modeSVGHeight = 250
 const modeColors = ['#264653', '#2A9D8F', '#E9C46A', '#F4A261', '#E76F51', '#A8DADC', '#457B9D'];
 
+const maxSteps = ref(1); // Maximum steps for the slide
+const props = defineProps({
+  step: { type: Number, required: true }
+})
+defineExpose({
+  maxSteps
+});
+
 onMounted(() => {
   ctx.add(() => {
     const color_mirror1 = gsap.getProperty(".mirror1 .cavity-mirror", "fill")
     const color_mirror2 = gsap.getProperty(".mirror2 .cavity-mirror", "fill")
 
-    const timeline = gsap.timeline()
+    const timeline = gsap.timeline({ paused: true });
+
+    watch(() => props.step, newStep => {
+      const tweenOld = `step-${newStep-1}`
+      const tweenNew = `step-${newStep}`
+      // Use tweenTo for smooth forward *and* backward motion
+      if (newStep > 0 && newStep <= maxSteps.value) {
+        timeline.tweenFromTo(tweenOld, tweenNew);
+      }
+    });
 
     gsap.set(".mirror1", {
       x: -mirrorInitialPosition,
@@ -69,34 +86,42 @@ onMounted(() => {
       fill: "#00000000",
     })
 
-    timeline.to([".mirror1 .cavity-mirror", ".mirror2 .cavity-mirror"], {
+    gsap.to([".mirror1 .cavity-mirror", ".mirror2 .cavity-mirror"], {
       x: 2*mirrorInitialPosition,
       drawSVG: "100%",
       duration: 0.5,
     })
 
-    timeline.to([".mirror1 .cavity-mirror", ".mirror2 .cavity-mirror"], {
+    gsap.to([".mirror1 .cavity-mirror", ".mirror2 .cavity-mirror"], {
       fill: (index) => { return index === 0 ? color_mirror1 : color_mirror2 },
       duration: 0.5,
     })
 
-    initializeCavityModes(nCavityModes, modeSVGWidth, modeSVGHeight, modeColors);
+    timeline.addLabel("step-0")
 
-    cavityModeRefs.value.forEach((modeRef, i) => {
-      const modePath = modeRef.pathRef;
-      gsap.set(modePath, {
-        drawSVG: "0%",
-        stroke: modeColors[i % modeColors.length],
-        strokeWidth: 2,
-      });
+    const modePaths = initializeCavityModes(nCavityModes, modeSVGWidth, modeSVGHeight, modeColors);
 
-      timeline.to(modePath, {
-        drawSVG: "100%",
-        duration: 1,
-        ease: "power1.inOut",
-      }, "<+0.5");
-    });
+    timeline.to(modePaths, {
+      drawSVG: "100%",
+      duration: 0.5,
+      ease: "power1.inOut",
+      stagger: 0.4
+    })
 
+    timeline.call(() => {
+      modePaths.forEach((path, i) => {
+        gsap.to(path, {
+          scaleY: -1,
+          duration: 1 / (i + 1),
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+          svgOrigin: "0 0",
+        })
+      })
+    })
+
+    timeline.addLabel("step-1")
   })
 })
 
@@ -109,17 +134,24 @@ onUnmounted(() => {
 function initializeCavityModes(nCavityModes, modeSVGWidth, modeSVGHeight, modeColors) {
   const xList = linrange(0, modeSVGWidth, 30);
   const kList = Array.from({ length: nCavityModes }, (_, i) => (i + 1) * Math.PI / modeSVGWidth);
-  const fList = kList.map(k => x => modeSVGHeight * Math.sin(k * x) / 3 + modeSVGHeight / 2);
+  const fList = kList.map(k => x => modeSVGHeight * Math.sin(k * x) / 3);
+
+  const modePaths = cavityModeRefs.value.map((ref) => ref.pathRef);
 
   const coordinatesList = fList.map(f => getCoordinates(f, xList));
   const rawPathList = coordinatesList.map(coords => MotionPathPlugin.arrayToRawPath(coords));
   const dList = rawPathList.map(rawPath => MotionPathPlugin.rawPathToString(rawPath));
-  for (let i = 0; i < nCavityModes; i++) {
-    const modePath = cavityModeRefs.value[i].pathRef;
-    modePath.setAttribute('d', dList[i]);
-    modePath.setAttribute('stroke', modeColors[i % modeColors.length]);
-    modePath.setAttribute('stroke-width', '2');
-  }
+
+  gsap.set(modePaths, {
+    drawSVG: "0%",
+    attr: {
+      d: (i) => {return dList[i]},
+      stroke: (i) => {return modeColors[i % modeColors.length]},
+    },
+    strokeWidth: 3,
+  })
+
+  return modePaths
 }
 
 function getCoordinates(f, xValues) {
