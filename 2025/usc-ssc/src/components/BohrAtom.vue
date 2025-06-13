@@ -1,5 +1,5 @@
 <template>
-    <svg ref="rootRef" :width="size" :height="size" :viewBox="viewBox">
+    <svg ref="rootRef" class="totalSVG" :width="size" :height="size" :viewBox="viewBox">
         <!-- Nucleus -->
         <circle v-for="(pos, index) in [...nucleusLayout].reverse()"
             :key="`nucleon-${index}`"
@@ -102,7 +102,9 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  ctx.revert()
+  setTimeout(() => {
+    ctx.revert()
+  }, 500) // delay in milliseconds
 })
 
 function generatePackedNucleusAlternating(

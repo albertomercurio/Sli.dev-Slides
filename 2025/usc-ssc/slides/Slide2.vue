@@ -1,7 +1,7 @@
 <template>
   <div ref="slideRef" class="slide">
       <BohrAtom ref="atomRef" />
-      <div ref="photonRef" class="absolute w-3 h-3 rounded-full bg-yellow-400 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+      <div ref="photonRef" class="photon absolute w-3 h-3 rounded-full bg-yellow-400 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2" />
   </div>
 </template>
 
@@ -102,6 +102,8 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  ctx.revert();
+  setTimeout(() => {
+    ctx.revert()
+  }, 500) // delay in milliseconds
 });
 </script>
