@@ -17,6 +17,8 @@
   --slidev-code-tab-text-color: #67676c;
   --slidev-code-tab-font-size: 12px;
   --slidev-code-tab-active-text-color: #3c3c43;
+
+  --my-heading-font: "Arial", sans-serif;
 }
 
 html.dark {

@@ -1,4 +1,3 @@
-// src/components/Latex.vue
 <script setup>
 import { ref, watch, onMounted, computed } from 'vue'
 import katex from 'katex'
@@ -40,10 +39,6 @@ watch(() => props.expression, render)
 </template>
 
 <style>
-/*
-  Since we are back in a controlled Vue environment, the CSS conflicts
-  should be gone. These are base styles for good presentation.
-*/
 .katex-display {
   /* Add some margin to block-level equations for spacing */
   margin-top: 1rem;
