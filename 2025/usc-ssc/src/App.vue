@@ -20,20 +20,37 @@ const slides = [
 ]
 
 const isAppReady = ref(false)
-const currentSlideIndex = ref(0)
+const currentSlideRef = ref(null) // Reference to the current slide component
+const currentSlideIndex = ref(0) // Keeps track of the current slide index
+const currentSlideStep       = ref(0) // Keeps track of the current step in the slide
 
 const currentSlide = computed(() => slides[currentSlideIndex.value])
 
 function nextSlide() {
+  const maxSteps = currentSlideRef.value?.maxSteps ?? 0
+
+  console.log("currentSlideStep: ", currentSlideStep.value, "maxSteps: ", maxSteps)
+
+  if (currentSlideStep.value < maxSteps) {
+    currentSlideStep.value++
+    return
+  }
+
   if (currentSlideIndex.value < slides.length - 1) {
     currentSlideIndex.value++
+    currentSlideStep.value = 0
   }
 }
 
 function prevSlide() {
-  if (currentSlideIndex.value > 0) {
-    currentSlideIndex.value--
+  if (currentSlideStep.value > 0) {
+    currentSlideStep.value--
+    return
   }
+   if (currentSlideIndex.value > 0) {
+    currentSlideIndex.value--
+    currentSlideStep.value = slides[currentSlideIndex.value]?.steps ?? 0
+   }
 }
 
 // --- Keyboard Navigation ---
@@ -60,15 +77,17 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div v-if="isAppReady"  id="page-root" class="grid grid-cols-[1fr_max-content]" style="touch-action: pan-y;">
+  <div v-if="isAppReady"
+        id="page-root" class="grid grid-cols-[1fr_max-content]"
+        style="touch-action: pan-y;">
     <SlideContainer>
       <Center>
         <Transition name="fade" mode="out-in">
-            <component :is="currentSlide" />
+            <component :is="currentSlide" ref="currentSlideRef" />
         </Transition>
       </Center>
 
-      <GlobalFrame :current="currentSlideIndex" :total="slides.length" />1
+      <GlobalFrame :current="currentSlideIndex" :total="slides.length" />
     </SlideContainer>
   </div>
 </template>

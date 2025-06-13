@@ -17,6 +17,11 @@ const atomRef = ref();
 const photonRef = ref(null);
 const ctx = gsap.context(() => {});
 
+const maxSteps = ref(5); // Maximum steps for the slide
+defineExpose({
+  maxSteps
+});
+
 onMounted(() => {
   ctx.add(() => {
     const atom = atomRef.value.rootRef;
