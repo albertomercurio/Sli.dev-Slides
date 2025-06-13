@@ -19,6 +19,7 @@ const slides = [
   ...Object.values(mdModules).map(module => module.default)
 ]
 
+const isAppReady = ref(false)
 const currentSlideIndex = ref(0)
 
 const currentSlide = computed(() => slides[currentSlideIndex.value])
@@ -47,6 +48,10 @@ function handleKeydown(event) {
 // Add and remove the event listener to avoid memory leaks
 onMounted(() => {
   window.addEventListener('keydown', handleKeydown)
+  requestAnimationFrame(() => {
+    // Delay rendering slide by one frame
+    isAppReady.value = true
+  })
 })
 
 onUnmounted(() => {
@@ -55,12 +60,12 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div id="page-root" class="grid grid-cols-[1fr_max-content]" style="touch-action: pan-y;">
+  <div v-if="isAppReady"  id="page-root" class="grid grid-cols-[1fr_max-content]" style="touch-action: pan-y;">
     <SlideContainer>
       <Center>
-        <!-- <Transition name="fade" mode="out-in"> -->
-          <component :is="currentSlide" />
-        <!-- </Transition> -->
+        <Transition name="fade" mode="out-in">
+            <component :is="currentSlide" />
+        </Transition>
       </Center>
 
       <GlobalFrame :current="currentSlideIndex" :total="slides.length" />1

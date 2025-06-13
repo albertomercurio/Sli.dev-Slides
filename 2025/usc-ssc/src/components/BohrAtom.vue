@@ -20,7 +20,7 @@
                 :key="`electron-${orbitIndex}-${i}`"
                 :cx="center" :cy="center"
                 :r="electronRadius"
-                :class="`electron electron-orbit-${orbitIndex} electron-${i}`" />
+                :class="`electron electron-orbit-${orbitIndex} electron-${orbitIndex}-${i-1}`" />
         </template>
     </svg>
 </template>
