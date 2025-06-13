@@ -1,7 +1,3 @@
-<script setup>
-import Latex from '../src/components/Latex.vue'
-</script>
-
 <template>
   <div class="text-2xl text-left">
     <h1 class="text-5xl font-bold mb-8 text-center">Maxwell's Equations</h1>

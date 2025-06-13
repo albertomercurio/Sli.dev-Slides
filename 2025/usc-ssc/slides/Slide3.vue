@@ -10,8 +10,6 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, watch } from 'vue'
-import CavityMirror from '../src/components/CavityMirror.vue'
-import EmptySVG from '../src/components/EmptySVG.vue'
 import { gsap } from 'gsap'
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin'
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin'

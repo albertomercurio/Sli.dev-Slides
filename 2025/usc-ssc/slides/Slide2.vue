@@ -7,7 +7,6 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, watch } from "vue";
-import BohrAtom from "../src/components/BohrAtom.vue";
 import { gsap } from "gsap";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 gsap.registerPlugin(MotionPathPlugin);

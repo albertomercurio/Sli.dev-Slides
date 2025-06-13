@@ -1,5 +1,4 @@
 <script setup>
-import CodeBlock from '../src/components/CodeBlock.vue'
 
 const pythonCode = `
 def greet(name):

@@ -1,8 +1,5 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import SlideContainer from './components/SlideContainer.vue'
-import GlobalFrame from './components/GlobalFrame.vue'
-import Center from './components/layouts/Center.vue'
 
 // import Slide1 from '../slides/Slide1.md'
 // import Slide2 from '../slides/Slide2.md'

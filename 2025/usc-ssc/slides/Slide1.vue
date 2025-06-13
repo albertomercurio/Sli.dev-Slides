@@ -16,9 +16,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import CavityMirror from '../src/components/CavityMirror.vue'
-import BohrAtom from '../src/components/BohrAtom.vue'
-
-</script>
