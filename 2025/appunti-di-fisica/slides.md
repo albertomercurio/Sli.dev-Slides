@@ -27,7 +27,7 @@ transition: fade-out
 
   
 <BohrAtom ref="atomRef" class="my-atom" />
-<div ref="photonRef" class="absolute w-3 h-3 rounded-full bg-yellow-400 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+<div ref="photonRef" class="absolute w-3 h-3 rounded-full bg-yellow-400" />
 
 <script setup>
 

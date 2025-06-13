@@ -58,9 +58,9 @@ onUnmounted(() => {
   <div id="page-root" class="grid grid-cols-[1fr_max-content]" style="touch-action: pan-y;">
     <SlideContainer>
       <Center>
-        <Transition name="fade" mode="out-in">
+        <!-- <Transition name="fade" mode="out-in"> -->
           <component :is="currentSlide" />
-        </Transition>
+        <!-- </Transition> -->
       </Center>
 
       <GlobalFrame :current="currentSlideIndex" :total="slides.length" />1
