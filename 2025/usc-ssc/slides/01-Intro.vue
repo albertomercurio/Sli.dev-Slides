@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="slide translate-y-[-3rem]">
+  <div class="slide">
+    <div class="translate-y-[-3rem]">
       <h2> Exploring Ultrastrong and Superstrong Coupling Regimes in Quantum Electrodynamics </h2>
 
       <hr class="w-full my-6 border-epfl" />

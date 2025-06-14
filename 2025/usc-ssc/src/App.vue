@@ -4,7 +4,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 const slideOrder = [
   '01-Intro.vue',
   '02-PhotonAbsorption.vue',
-  '03-CavityQEDSketch.vue',
+  '03-CavityFabryPerot.vue',
   '04-Conclusion.vue',
   '100-EPFLPeople.vue'
 ]
