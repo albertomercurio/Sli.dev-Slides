@@ -7,7 +7,7 @@ const slideOrder = [
   '03-CavityFabryPerot.vue',
   '04-CavityWaveguide.vue',
   '04-Conclusion.vue',
-  '100-EPFLPeople.vue'
+  'ThankYou.vue'
 ]
 
 const vueModules = import.meta.glob('../slides/*.vue', { eager: true })

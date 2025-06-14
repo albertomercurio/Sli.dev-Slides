@@ -18,7 +18,7 @@ const progressWidth = computed(() =>
   <div class="pointer-events-none fixed inset-0 z-50 select-none">
     <!-- Logo -->
     <img src="/EPFL_Logo.svg"
-         class="absolute bottom-0 left-0 w-[10%] m-8" />
+         class="absolute bottom-0 left-0 w-[10%] m-8 epfl-logo-global" />
 
     <!-- Progress bar -->
     <div class="absolute bottom-0 left-0 h-1 bg-epfl

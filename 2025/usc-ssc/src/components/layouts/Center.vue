@@ -1,6 +1,6 @@
 <template>
   <div class="slidev-layout h-full grid place-content-center text-center">
-    <div class="my-auto slide">
+    <div class="my-auto">
       <slot />
     </div>
   </div>
