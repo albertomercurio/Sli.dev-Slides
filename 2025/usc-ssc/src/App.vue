@@ -1,20 +1,19 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 
-// import Slide1 from '../slides/Slide1.md'
-// import Slide2 from '../slides/Slide2.md'
-// import Slide3 from '../slides/Slide3.md'
-// import Slide4 from '../slides/Slide4.vue'
-
-// const slides = [Slide1, Slide2, Slide3, Slide4]
-
-// Dynamically import all .vue files from the slides directory
-const vueModules = import.meta.glob('../slides/*.vue', { eager: true })
-const mdModules = import.meta.glob('../slides/*.md', { eager: true })
-const slides = [
-  ...Object.values(vueModules).map(module => module.default),
-  ...Object.values(mdModules).map(module => module.default)
+const slideOrder = [
+  '01-Intro.vue',
+  '02-PhotonAbsorption.vue',
+  '03-CavityQEDSketch.vue',
+  '04-Conclusion.vue',
+  '100-EPFLPeople.vue'
 ]
+
+const vueModules = import.meta.glob('../slides/*.vue', { eager: true })
+
+const slides = slideOrder
+  .map(name => vueModules[`../slides/${name}`]?.default)
+  .filter(Boolean)
 
 const isAppReady = ref(false)
 const currentSlideRef = ref(null) // Reference to the current slide component
