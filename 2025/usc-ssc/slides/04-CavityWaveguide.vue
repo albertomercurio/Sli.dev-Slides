@@ -1,7 +1,7 @@
 <template>
     <div ref="slideRef" class="slide">
         <SlideTitle tag="h2">
-        Superconducting Waveguide Resonator
+        Cavity Modes in Superconducting Circuits
         </SlideTitle>
 
         <!-- Waveguide SVG -->
@@ -11,11 +11,9 @@
             <rect class="superconductor" :x="waveguideLength / 2 + waveguideGap" :y="-waveguideWidth / 2" :width="(waveguideSVGWidth - waveguideLength) / 2 - waveguideGap" :height="waveguideWidth" />
             <rect class="superconductor" :x="-waveguideSVGWidth / 2" :y="-waveguideSVGHeight / 2" :width="waveguideSVGWidth" :height="(waveguideSVGHeight - waveguideWidth - waveguideGapGround) / 2" />
             <rect class="superconductor" :x="-waveguideSVGWidth / 2" :y="waveguideSVGHeight / 2 - (waveguideSVGHeight - waveguideWidth - waveguideGapGround) / 2" :width="waveguideSVGWidth"    :height="(waveguideSVGHeight - waveguideWidth - waveguideGapGround) / 2" />
-        </svg>
 
-        <EmptySVG v-for="i in nCavityModes" ref="cavityModeRefs" :key="`mode-${i}`"
-      :width="waveguideSVGWidth" :height="waveguideSVGHeight" :viewBox="waveguideSVGviewBox"
-        class="cavity-mode absolute" />
+            <path v-for="i in nCavityModes" ref="cavityModeRefs" :key="`mode-${i}`" fill="none" d="" />
+        </svg>
     </div>
 </template>
 
@@ -46,16 +44,33 @@ const waveguideColor = "#666"
 const nCavityModes = 3
 const modeColors = ['#264653', '#2A9D8F', '#E9C46A', '#F4A261', '#E76F51', '#A8DADC', '#457B9D'];
 
+const maxSteps = ref(1); // Maximum steps for the slide
+const props = defineProps({
+  step: { type: Number, required: true }
+})
+defineExpose({
+  maxSteps
+});
+
 onMounted(() => {
     ctx.add(() => {
         GSAPInitializeElements()
-        const modePaths = initializeCavityModes(nCavityModes, waveguideSVGWidth, waveguideSVGHeight, modeColors)
+        const modePaths = initializeCavityModes(nCavityModes, waveguideLength, waveguideSVGHeight, modeColors)
 
         const timeline = gsap.timeline({ 
             paused: false,
             defaults: {
                 duration: 0.5,
                 ease: "power1.inOut",
+            }
+        });
+
+        watch(() => props.step, newStep => {
+            const tweenOld = `step-${newStep-1}`
+            const tweenNew = `step-${newStep}`
+            // Use tweenTo for smooth forward *and* backward motion
+            if (newStep > 0 && newStep <= maxSteps.value) {
+                timeline.tweenFromTo(tweenOld, tweenNew);
             }
         });
 
@@ -70,9 +85,26 @@ onMounted(() => {
             },
         })
 
+        timeline.addPause()
+
+        timeline.addLabel("step-0")
+
         timeline.to(modePaths, {
             drawSVG: "100%",
             stagger: 0.4
+        })
+
+        timeline.call(() => {
+            modePaths.forEach((path, i) => {
+                gsap.to(path, {
+                scaleY: -1,
+                duration: 2 / (i + 1),
+                ease: "sine.inOut",
+                repeat: -1,
+                yoyo: true,
+                svgOrigin: "0 0",
+                })
+            })
         })
 
     }, slideRef.value)
@@ -92,13 +124,6 @@ function GSAPInitializeElements() {
         yPercent: -50,
     })
 
-    gsap.set(".cavity-mode", {
-        left: "50%",
-        top:  "50%",
-        xPercent: -50,
-        yPercent: -50,
-    })
-
     gsap.set(".superconductor", {
         drawSVG: "0%",
         attr: {
@@ -107,12 +132,12 @@ function GSAPInitializeElements() {
     })
 }
 
-function initializeCavityModes(nCavityModes, waveguideSVGWidth, waveguideSVGHeight, modeColors) {
-  const xList = linrange(-waveguideSVGWidth/2, waveguideSVGWidth/2, 30);
-  const kList = Array.from({ length: nCavityModes }, (_, i) => (i + 1) * Math.PI / waveguideSVGWidth);
-  const fList = kList.map(k => x => waveguideSVGHeight * Math.sin(k * (x - waveguideSVGWidth / 2)) / 3);
+function initializeCavityModes(nCavityModes, width, height, modeColors) {
+  const xList = linrange(-width/2, width/2, 30);
+  const kList = Array.from({ length: nCavityModes }, (_, i) => (i + 1) * Math.PI / width);
+  const fList = kList.map(k => x => height * Math.sin(k * (x - width / 2)) / 3);
 
-  const modePaths = cavityModeRefs.value.map((ref) => ref.pathRef);
+  const modePaths = cavityModeRefs.value //.map((ref) => ref.pathRef);
 
   const coordinatesList = fList.map(f => getCoordinates(f, xList));
   const rawPathList = coordinatesList.map(coords => MotionPathPlugin.arrayToRawPath(coords));
