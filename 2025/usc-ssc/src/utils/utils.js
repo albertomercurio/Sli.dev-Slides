@@ -6,3 +6,15 @@ export function linrange(a, b, n) {
 export function getCoordinates(f, xValues) {
   return xValues.map(x => ({ x: x, y: f(x) }));
 }
+
+export function drawSVG(timeline, target, fillColor, value="100%", stagger=0.1, props={}) {
+  timeline.to(target, {
+    drawSVG: value,
+    stagger: stagger,
+    ...props,
+  })
+
+  timeline.to(target, {
+    fill: fillColor,
+  })
+}

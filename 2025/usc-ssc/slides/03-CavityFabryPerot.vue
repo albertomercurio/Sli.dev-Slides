@@ -19,7 +19,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { gsap } from 'gsap'
-import { linrange, getCoordinates } from '../src/utils/utils.js'
+import { linrange, getCoordinates, drawSVG } from '../src/utils/utils.js'
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin'
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin'
 gsap.registerPlugin(DrawSVGPlugin)
@@ -53,10 +53,13 @@ onMounted(() => {
     const color_mirror1 = gsap.getProperty(".mirror1 .cavity-mirror", "fill")
     const color_mirror2 = gsap.getProperty(".mirror2 .cavity-mirror", "fill")
 
-    const timeline = gsap.timeline({ paused: false, defaults: {
-      duration: 0.5,
-      ease: "power1.inOut",
-    } });
+    const timeline = gsap.timeline({
+      paused: false, 
+      defaults: {
+        duration: 0.5,
+        ease: "power1.inOut",
+      }
+    });
 
     watch(() => props.step, newStep => {
       const tweenOld = `step-${newStep-1}`
@@ -70,15 +73,17 @@ onMounted(() => {
     GSAPInitializeElements();
     const modePaths = initializeCavityModes(nCavityModes, modeSVGWidth, modeSVGHeight, modeColors);
 
-    timeline.to([".mirror1 .cavity-mirror", ".mirror2 .cavity-mirror"], {
-      x: 2*mirrorInitialPosition,
-      drawSVG: "100%",
-      duration: 1,
-    })
-
-    timeline.to([".mirror1 .cavity-mirror", ".mirror2 .cavity-mirror"], {
-      fill: (index) => { return index === 0 ? color_mirror1 : color_mirror2 },
-    })
+    drawSVG(
+      timeline,
+      [".mirror1 .cavity-mirror", ".mirror2 .cavity-mirror"],
+      (index) => { return index === 0 ? color_mirror1 : color_mirror2 },
+      "100%",
+      0.1,
+      {
+        x: 2*mirrorInitialPosition,
+        duration: 1
+      }
+    )
 
     timeline.addPause()
 

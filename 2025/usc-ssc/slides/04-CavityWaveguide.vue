@@ -20,7 +20,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { gsap } from 'gsap'
-import { linrange, getCoordinates } from '../src/utils/utils.js'
+import { linrange, getCoordinates, drawSVG } from '../src/utils/utils.js'
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin'
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin'
 gsap.registerPlugin(DrawSVGPlugin)
@@ -74,16 +74,7 @@ onMounted(() => {
             }
         });
 
-        timeline.to(".superconductor", {
-            drawSVG: "100%",
-            stagger: 0.1
-        })
-
-        timeline.to(".superconductor", {
-            attr: {
-                fill: waveguideColor
-            },
-        })
+        drawSVG(timeline, ".superconductor", waveguideColor)
 
         timeline.addPause()
 
