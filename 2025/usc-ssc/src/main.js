@@ -16,6 +16,7 @@ import SlideTitle from './components/app/SlideTitle.vue'
 import EmptySVG from './components/app/EmptySVG.vue'
 import CodeBlock from './components/app/CodeBlock.vue'
 import Latex from './components/app/LaTeX.vue'
+import Arrow from './components/app/Arrow.vue'
 
 // User Components
 import BohrAtom from './components/BohrAtom.vue'
@@ -31,6 +32,7 @@ app.component('SlideTitle', SlideTitle)
 app.component('EmptySVG', EmptySVG)
 app.component('CodeBlock', CodeBlock)
 app.component('Latex', Latex)
+app.component('Arrow', Arrow)
 
 // Registering User Components
 app.component('BohrAtom', BohrAtom)
