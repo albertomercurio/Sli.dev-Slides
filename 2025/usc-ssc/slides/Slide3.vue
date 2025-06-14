@@ -44,7 +44,7 @@ onMounted(() => {
     const color_mirror1 = gsap.getProperty(".mirror1 .cavity-mirror", "fill")
     const color_mirror2 = gsap.getProperty(".mirror2 .cavity-mirror", "fill")
 
-    const timeline = gsap.timeline({ paused: true });
+    const timeline = gsap.timeline({ paused: false });
 
     watch(() => props.step, newStep => {
       const tweenOld = `step-${newStep-1}`
@@ -84,16 +84,18 @@ onMounted(() => {
       fill: "#00000000",
     })
 
-    gsap.to([".mirror1 .cavity-mirror", ".mirror2 .cavity-mirror"], {
+    timeline.to([".mirror1 .cavity-mirror", ".mirror2 .cavity-mirror"], {
       x: 2*mirrorInitialPosition,
       drawSVG: "100%",
-      duration: 0.5,
+      duration: 1,
     })
 
-    gsap.to([".mirror1 .cavity-mirror", ".mirror2 .cavity-mirror"], {
+    timeline.to([".mirror1 .cavity-mirror", ".mirror2 .cavity-mirror"], {
       fill: (index) => { return index === 0 ? color_mirror1 : color_mirror2 },
       duration: 0.5,
     })
+
+    timeline.addPause()
 
     timeline.addLabel("step-0")
 

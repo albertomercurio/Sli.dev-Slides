@@ -18,7 +18,7 @@ const slideRef = ref();
 const atomRef = ref();
 const photonRef = ref(null);
 const ctx = gsap.context(() => {});
-const maxSteps = ref(4); // Maximum steps for the slide
+const maxSteps = ref(3); // Maximum steps for the slide
 
 const props = defineProps({
   step: { type: Number, required: true }
@@ -89,8 +89,6 @@ onMounted(() => {
       duration: 1,
     });
 
-    timeline.addLabel("step-2")
-
     timeline.to(electron, {
       onStart: () => {
         let electronTween = gsap.getTweensOf(".electron-0-0")[0];
@@ -132,7 +130,7 @@ onMounted(() => {
       });
     });
 
-    timeline.addLabel("step-3")
+    timeline.addLabel("step-2")
 
     timeline.to(electron, {
       onStart: () => {
@@ -180,7 +178,18 @@ onMounted(() => {
       });
     });
 
-    timeline.addLabel("step-4");
+    timeline.to(photon, {
+      opacity: 1,
+      duration: 1,
+    });
+
+    timeline.to(photon, {
+      x: -300,
+      y: 500,
+      duration: 2,
+    });
+
+    timeline.addLabel("step-3");
 
     }, slideRef.value);
 });
