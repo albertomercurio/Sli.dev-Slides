@@ -5,6 +5,7 @@ const slideOrder = [
   '01-Intro.vue',
   '02-PhotonAbsorption.vue',
   '03-CavityFabryPerot.vue',
+  '04-CavityWaveguide.vue',
   '04-Conclusion.vue',
   '100-EPFLPeople.vue'
 ]

@@ -1,7 +1,7 @@
 <template>
   <div ref="slideRef" class="slide">
     <SlideTitle tag="h2">
-      A Fabry-Perot Cavity
+      Fabry-Perot Cavity
     </SlideTitle>
     <div class="absolute" id="cavity-group">
       <CavityMirror ref="mirror1Ref" class="mirror1 absolute" :size="80" />
@@ -19,6 +19,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { gsap } from 'gsap'
+import { linrange, getCoordinates } from '../src/utils/utils.js'
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin'
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin'
 gsap.registerPlugin(DrawSVGPlugin)
@@ -192,15 +193,6 @@ function initializeCavityModes(nCavityModes, modeSVGWidth, modeSVGHeight, modeCo
   })
 
   return modePaths
-}
-
-function getCoordinates(f, xValues) {
-  return xValues.map(x => ({ x: x, y: f(x) }));
-}
-
-function linrange(a, b, n) {
-  const step = (b - a) / (n - 1);
-  return Array.from({ length: n }, (_, i) => a + i * step);
 }
 
 </script>
