@@ -21,7 +21,7 @@
         <p id="reference" class="absolute bottom-16 left-1/2 transform -translate-x-1/2 text-black text-xs italic underline">Cohen-Tannoudji, John Wiley & Sons, 1998</p>
 
         <h3 id="question" class="absolute w-full !text-slate-600">
-            What happens if we truncate in the two-level subspace?
+            What happens if we project into the two-level subspace?
         </h3>
     </div>
 </template>

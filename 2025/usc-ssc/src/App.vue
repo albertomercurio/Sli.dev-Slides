@@ -10,6 +10,7 @@ const slideOrder = [
   '06-JaynesCummings.vue',
   '07-MinimalCoupling.vue',
   '08-GaugeInvariance.vue',
+  '09-GaugeInvarianceTruncated.vue',
   'ThankYou.vue'
 ]
 

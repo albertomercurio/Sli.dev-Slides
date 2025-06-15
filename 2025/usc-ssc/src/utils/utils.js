@@ -48,6 +48,28 @@ export function alignObjectsCenterSet(timeline, fromElement, toElement, point, g
   });
 }
 
+export function getDistance(fromId, toId, fromOrigin=[0.5, 0.5], toOrigin=[0.5, 0.5]) {
+  const fromElement = gsap.utils.toArray(fromId)[0];
+  const toElement = gsap.utils.toArray(toId)[0];
+
+  if (!fromElement || !toElement) {
+    console.warn(`Elements not found: ${fromId} or ${toId}`);
+    return { x: 0, y: 0 };
+  }
+
+  return MotionPathPlugin.getRelativePosition(fromElement, toElement, fromOrigin, toOrigin);
+}
+
+export function setAlignElementTo(timeline, fromId, toId, fromOrigin=[0.5, 0.5], toOrigin=[0.5, 0.5], gap={x: 0, y: 0}) {
+  const fromElement = gsap.utils.toArray(fromId)[0];
+  const dist = getDistance(fromId, toId, fromOrigin, toOrigin);
+
+  timeline.set(fromElement, {
+    x: "+=" + dist.x + gap.x,
+    y: "+=" + dist.y + gap.y,
+  })
+}
+
 export function doubleWellPotentialFun(x, gamma=50) {
   const m = 1; // Mass
   const alpha = 50;
