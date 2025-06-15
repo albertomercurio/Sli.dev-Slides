@@ -26,8 +26,6 @@ export function drawSVG(timeline, target, fillColor, value="100%", stagger=0.1, 
 export function alignObjectsCenterSet(timeline, fromElement, toElement, point, gapx=0, gapy=0) {
   const p = MotionPathPlugin.convertCoordinates(fromElement, toElement, point)
 
-  console.log("Point:", p);
-
   timeline.set(toElement, {
     x: p.x + gapx,
     y: p.y + gapy,

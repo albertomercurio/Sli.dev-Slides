@@ -22,9 +22,8 @@
         <Latex class="absolute latex-states energy-1" expression="\vert 1 \rangle" :display="true" />
         <Latex class="absolute latex-states energy-2" expression="\vert 2 \rangle" :display="true" />
 
-        <div class="absolute top-1/4 left-1/3 w-16 h-16 bg-red-500 ciaone">
-            
-        </div>
+        <Arrow class="arrow-0" :start="arrowCoordinates[0].start" :end="arrowCoordinates[0].end" />
+        <Arrow class="arrow-1" :start="arrowCoordinates[1].start" :end="arrowCoordinates[1].end" />
     </div>
 </template>
 
@@ -42,6 +41,10 @@ const ctx = gsap.context(() => { }, slideRef.value)
 
 // Energy Levels properties
 const energyColors = ["#236B8E", "#83C167", "#E07A5F"]
+const arrowCoordinates = ref(Array.from({ length: 2 }, (_, i) => ({
+    start: { x: 0, y: 0 },
+    end: { x: 20, y: 40 }
+})))
 
 const maxSteps = ref(4); // Maximum steps for the slide
 const props = defineProps({
@@ -111,8 +114,18 @@ function GSAPInitializeElements() {
     for (let i = 0; i < 3; i++) {
         let fromElement = gsap.utils.toArray(`.energy-levels.energy-${i}`)[0]
         let toElement = gsap.utils.toArray(`.latex-states.energy-${i}`)[0]
-        
+
         alignObjectsCenterSet(gsap, fromElement, toElement, { x: 4, y: 0 }, 20)
+
+        if (i > 0) {
+            let arrow = gsap.utils.toArray(`.arrow-${i-1}`)[0]
+            let fromElementEnd = gsap.utils.toArray(`.energy-levels.energy-${i-1}`)[0]
+            let pointStart = MotionPathPlugin.convertCoordinates(fromElement, arrow, { x: -0.1, y: +0.1 })
+            let pointEnd = MotionPathPlugin.convertCoordinates(fromElementEnd, arrow, { x: -0.1, y: +-.1 })
+
+            arrowCoordinates.value[i-1].start = pointStart
+            arrowCoordinates.value[i-1].end = pointEnd
+        }
     }
 
     gsap.set('.energy-levels', {
