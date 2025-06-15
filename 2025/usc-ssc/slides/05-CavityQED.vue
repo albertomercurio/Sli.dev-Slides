@@ -38,7 +38,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { gsap } from 'gsap'
-import { linrange, getCoordinates, drawSVG, alignObjectsCenterSet } from '../src/utils/utils.js'
+import { drawSVG, alignObjectsCenterSet } from '../src/utils/utils.js'
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin'
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin'
 gsap.registerPlugin(DrawSVGPlugin)

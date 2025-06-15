@@ -1,5 +1,5 @@
 <template>
-    <component :is="tag" v-if="hasContent" class="absolute inset-x-0 top-0 text-left px-4">
+    <component :is="tag" v-if="hasContent" class="absolute inset-x-0 top-0 text-left px-4 !text-epfl">
         <slot>{{ text }}</slot>
     </component>
 </template>
