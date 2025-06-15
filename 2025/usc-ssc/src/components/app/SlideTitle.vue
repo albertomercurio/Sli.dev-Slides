@@ -14,7 +14,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
     text: '',
-    tag: 'h1'
+    tag: 'h2'
 })
 
 const slots = useSlots()

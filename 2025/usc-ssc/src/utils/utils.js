@@ -11,6 +11,17 @@ export function getCoordinates(f, xValues) {
   return xValues.map(x => ({ x: x, y: f(x) }));
 }
 
+export function plotDAttribute(path, xList, f, viewBox) {
+  // The SVG starts form the top left corner, so we need to flip the y-axis
+  const coordinates = getCoordinates((x) => viewBox.height - f(x), xList)
+  const rawPath = MotionPathPlugin.arrayToRawPath(coordinates)
+  const dAttribute = MotionPathPlugin.rawPathToString(rawPath)
+
+  path.setAttribute("d", dAttribute)
+
+  return dAttribute;
+}
+
 export function drawSVG(timeline, target, fillColor, value="100%", stagger=0.1, props={}) {
   timeline.to(target, {
     drawSVG: value,
@@ -35,4 +46,12 @@ export function alignObjectsCenterSet(timeline, fromElement, toElement, point, g
     xPercent: -50,
     yPercent: -50,
   });
+}
+
+export function doubleWellPotentialFun(x, gamma=50) {
+  const m = 1; // Mass
+  const alpha = 50;
+  const beta = Math.pow((gamma * Math.pow(alpha, 2) / m), 1/3);
+
+  return 0.1 * (alpha * Math.pow(x, 4) - beta * Math.pow(x, 2));
 }
