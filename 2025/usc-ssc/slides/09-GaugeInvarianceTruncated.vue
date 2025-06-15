@@ -32,7 +32,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, watch } from 'vue'
-import { getDistance, setAlignElementTo } from '../src/utils/utils.js'
+import { getDistance, setAlignElementTo, preloadImages } from '../src/utils/utils.js'
 import { gsap } from 'gsap'
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin'
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin'
@@ -50,7 +50,11 @@ defineExpose({
   maxSteps
 });
 
-onMounted(() => {
+onMounted(async () => {
+    await preloadImages([
+        "/images/plots/de-bernardis-gauge.svg",
+        "/images/plots/di-stefano-gauge.png"
+    ])
     ctx.add(() => {
         GSAPInitializeElements()
 
@@ -151,10 +155,7 @@ onMounted(() => {
             autoAlpha: 0,
         })
 
-        timeline.fromTo(["#de-bernardis-gauge", "#de-bernardis-reference"], {
-            autoAlpha: 0,
-            scale: 0,
-        }, {
+        timeline.to(["#de-bernardis-gauge", "#de-bernardis-reference"], {
             autoAlpha: 1,
             scale: 1,
         })
@@ -174,6 +175,8 @@ onMounted(() => {
         timeline.to("#question-dipole-gauge", {
             autoAlpha: 1,
         })
+
+        timeline.addLabel("step-11")
 
     }, slideRef.value)
 })
@@ -207,22 +210,26 @@ function GSAPInitializeElements() {
         scale: 0.3,
     })
 
-    setAlignElementTo(gsap, "#coulomb-hamiltonian-projected-1", "#projection-operator", [0.5, 0.0], [0.5, 1.0]);
+    setAlignElementTo("#coulomb-hamiltonian-projected-1", "#projection-operator", [0.5, 0.0], [0.5, 1.0]);
 
-    setAlignElementTo(gsap, "#coulomb-hamiltonian-projected-2", "#coulomb-hamiltonian-projected-1", [0.5, 0.0], [0.5, 1.0]);
+    setAlignElementTo("#coulomb-hamiltonian-projected-2", "#coulomb-hamiltonian-projected-1", [0.5, 0.0], [0.5, 1.0]);
 
-    setAlignElementTo(gsap, "#dipole-hamiltonian-projected-1", "#projection-operator");
+    setAlignElementTo("#dipole-hamiltonian-projected-1", "#projection-operator");
 
-    setAlignElementTo(gsap, "#dipole-hamiltonian-projected-2", "#dipole-hamiltonian-projected-1", [0.5, 0.0], [0.5, 1.0]);
+    setAlignElementTo("#dipole-hamiltonian-projected-2", "#dipole-hamiltonian-projected-1", [0.5, 0.0], [0.5, 1.0]);
 
-    setAlignElementTo(gsap, "#dipole-hamiltonian-projected-3", "#dipole-hamiltonian-projected-2", [0.5, 0.0], [0.5, 1.0]);
+    setAlignElementTo("#dipole-hamiltonian-projected-3", "#dipole-hamiltonian-projected-2", [0.5, 0.0], [0.5, 1.0]);
 
-    setAlignElementTo(gsap, "#de-bernardis-reference", "#de-bernardis-gauge", [0.5, 0.0], [0.5, 1.02]);
+    setAlignElementTo("#de-bernardis-reference", "#de-bernardis-gauge", [0.5, 0.0], [0.5, 1.02]);
 
-    setAlignElementTo(gsap, "#di-stefano-reference", "#di-stefano-gauge", [0.5, 0.0], [0.5, 1.02]);
+    setAlignElementTo("#di-stefano-reference", "#di-stefano-gauge", [0.5, 0.0], [0.5, 1.02]);
 
     gsap.set(["#coulomb-hamiltonian-projected-1", "#coulomb-hamiltonian-projected-2", "#dipole-hamiltonian-projected-1", "#dipole-hamiltonian-projected-2", "#dipole-hamiltonian-projected-3", "#question", "#de-bernardis-gauge", "#de-bernardis-reference", "#question-dipole-gauge"], {
         autoAlpha: 0,
+    })
+
+    gsap.set(["#de-bernardis-gauge", "#de-bernardis-reference"], {
+        scale: 0,
     })
 
     gsap.set(["#di-stefano-gauge", "#di-stefano-reference"], {
