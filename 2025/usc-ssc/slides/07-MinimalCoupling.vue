@@ -29,7 +29,7 @@
         <Latex id="atom-hamiltonian" class="latex-formula absolute bottom-1/8 left-55" expression="\hat{H}_a = \frac{\hat{p}^2}{2m} + V(\hat{x})" :display="true" />
         <Latex id="cavity-hamiltonian" class="latex-formula absolute bottom-1/8 right-55" expression="\hat{H}_c = \omega_c \hat{a}^\dagger \hat{a}" :display="true" />
 
-        <Latex id="total-hamiltonian-1" class="latex-formula total-hamiltonian absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 scale-125" expression="\hat{H}_\mathrm{tot} = \frac{(\hat{p} - q \hat{A})^2}{2m} + V(\hat{x}) + \omega_c \hat{a}^\dagger \hat{a}" :display="true" />
+        <Latex id="total-hamiltonian-1" class="latex-formula total-hamiltonian absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 scale-125" expression="\hat{H}_\mathrm{tot} = \frac{1}{2m}(\hat{p} - q \hat{A})^2 + V(\hat{x}) + \omega_c \hat{a}^\dagger \hat{a}" :display="true" />
         <Latex id="A-term" class="latex-formula total-hamiltonian absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 scale-125" expression="\hat{A} = A_0 (\hat{a} + \hat{a}^\dagger)" :display="true" />
         <Latex id="total-hamiltonian-2" class="latex-formula total-hamiltonian absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 scale-125" expression="\hat{H}_\mathrm{tot} = \frac{\hat{p}^2}{2m} + V(\hat{x}) + \omega_c \hat{a}^\dagger \hat{a} - \frac{q}{m} A_0 \hat{p} (\hat{a} + \hat{a}^\dagger) + \frac{q^2 A_0^2}{2m} (\hat{a} + \hat{a}^\dagger)^2" :display="true" />
     </div>
@@ -123,9 +123,13 @@ onMounted(() => {
 
         timeline.addLabel("step-3")
 
-        timeline.to(["#total-hamiltonian-1", "#A-term"], {
+        timeline.to("#A-term", {
             autoAlpha: 0,
         })
+
+        timeline.to("#total-hamiltonian-1", {
+            y: -120,
+        }, "<")
 
         timeline.to("#total-hamiltonian-2", {
             autoAlpha: 1,

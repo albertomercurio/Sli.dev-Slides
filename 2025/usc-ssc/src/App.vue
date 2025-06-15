@@ -9,6 +9,7 @@ const slideOrder = [
   '05-CavityQED.vue',
   '06-JaynesCummings.vue',
   '07-MinimalCoupling.vue',
+  '08-GaugeInvariance.vue',
   'ThankYou.vue'
 ]
 
