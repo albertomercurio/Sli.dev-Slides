@@ -4,7 +4,7 @@
             Cavity QED
         </SlideTitle>
 
-        <BohrAtom ref="atomRef" class="absolute left-1/6 top-1/2 transform -translate-y-1/2" />
+        <BohrAtom ref="atomRef" class="atom absolute left-1/6 top-1/2 transform -translate-y-1/2" />
 
         <svg width="300" height="300" viewBox="0 0 4 6" class="absolute right-1/6 top-1/2 transform -translate-y-1/2">
             <line class="energy-levels energy-2" :stroke="energyColors[0]" x1="0" x2="4" y1="1" y2="1" />
@@ -26,6 +26,9 @@
         <Latex class="absolute latex-states energy-2" expression="\vert 2 \rangle" :display="true" />
         <Latex class="absolute arrows latex-arrows arrow-0" expression="\omega_{10}" :display="true" />
         <Latex class="absolute arrows latex-arrows arrow-1" expression="\omega_{21}" :display="true" />
+
+        <CavityMirror class="mirror1 absolute" :size="80" />
+        <CavityMirror class="mirror2 absolute" :size="80" />
     </div>
 </template>
 
@@ -40,6 +43,7 @@ gsap.registerPlugin(MotionPathPlugin)
 
 const slideRef = ref(null)
 const ctx = gsap.context(() => { }, slideRef.value)
+const atomRef = ref(null)
 
 // Energy Levels properties
 const energyColors = ["#236B8E", "#83C167", "#E07A5F"]
@@ -48,7 +52,10 @@ const arrowCoordinates = ref(Array.from({ length: 2 }, (_, i) => ({
     end: { x: 20, y: 40 }
 })))
 
-const maxSteps = ref(7); // Maximum steps for the slide
+//  Mirrors Properties
+const mirrorInitialPosition = 300
+
+const maxSteps = ref(8); // Maximum steps for the slide
 const props = defineProps({
   step: { type: Number, required: true }
 })
@@ -58,6 +65,8 @@ defineExpose({
 
 onMounted(() => {
     ctx.add(() => {
+        const mirrorFill = gsap.getProperty('.mirror1 .cavity-mirror', 'fill')
+
         GSAPInitializeElements()
 
         const timeline = gsap.timeline({ 
@@ -121,6 +130,30 @@ onMounted(() => {
 
         timeline.addLabel('step-7')
 
+        timeline.to([".arrows", ".energy-levels", ".latex-states", ".energy-dots"], {
+            autoAlpha: 0,
+        })
+
+        timeline.to(atomRef.value.rootRef, {
+            top: "50%",
+            left: "50%",
+            xPercent: -50,
+        }, "<")
+
+        drawSVG(
+            timeline,
+            [".mirror1 .cavity-mirror", ".mirror2 .cavity-mirror"],
+            mirrorFill,
+            "100%",
+            0.0,
+            {
+                x: 2*mirrorInitialPosition,
+                duration: 1
+            }
+        )
+
+        timeline.addLabel('step-8')
+
     }, slideRef.value)
 })
 
@@ -167,6 +200,28 @@ function GSAPInitializeElements() {
     })
     gsap.set('.arrows', {
         autoAlpha: 0,
+    })
+
+    gsap.set(".mirror1", {
+        x: -mirrorInitialPosition,
+        left: "50%",
+        top:  "50%",
+        xPercent: -50,
+        yPercent: -50
+    })
+
+    gsap.set(".mirror2", {
+        x: mirrorInitialPosition,
+        left: "50%",
+        top:  "50%",
+        xPercent: -50,
+        yPercent: -50,
+        rotation: 180,
+    })
+
+    gsap.set([".mirror1 .cavity-mirror", ".mirror2 .cavity-mirror"], {
+        drawSVG: "0%",
+        fill: "#00000000",
     })
 }
 
