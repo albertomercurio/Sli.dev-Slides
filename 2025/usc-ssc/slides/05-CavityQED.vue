@@ -1,12 +1,12 @@
 <template>
     <div ref="slideRef" class="slide">
         <SlideTitle tag="h2">
-            Cavity QED
+            The Jaynes-Cummings Model
         </SlideTitle>
 
         <BohrAtom ref="atomRef" class="atom absolute left-1/6 top-1/2 transform -translate-y-1/2" />
 
-        <svg width="300" height="300" viewBox="0 0 4 6" class="absolute right-1/6 top-1/2 transform -translate-y-1/2">
+        <svg width="300" height="300" viewBox="0 0 4 6" id="energy-levels-svg" class="absolute right-1/6 top-1/2 transform -translate-y-1/2">
             <line class="energy-levels energy-2" :stroke="energyColors[0]" x1="0" x2="4" y1="1" y2="1" />
             <line class="energy-levels energy-1" :stroke="energyColors[1]" x1="0" x2="4" y1="4" y2="4" />
             <line class="energy-levels energy-0" :stroke="energyColors[2]" x1="0" x2="4" y1="5" y2="5" />
@@ -18,13 +18,16 @@
             </g>
         </svg>
 
-        <Arrow class="arrow-0 arrows" :start="arrowCoordinates[0].start" :end="arrowCoordinates[0].end" />
+        <div id="two-level-system" class="absolute">
+            <Arrow class="arrow-0 arrows" :start="arrowCoordinates[0].start" :end="arrowCoordinates[0].end" />
+            <Latex class="absolute latex-states energy-0" expression="\vert 0 \rangle" :display="true" />
+            <Latex class="absolute latex-states energy-1" expression="\vert 1 \rangle" :display="true" />
+            <Latex class="absolute arrows latex-arrows arrow-0" expression="\omega_{10}" :display="true" />
+        </div>
+
         <Arrow class="arrow-1 arrows" :start="arrowCoordinates[1].start" :end="arrowCoordinates[1].end" />
 
-        <Latex class="absolute latex-states energy-0" expression="\vert 0 \rangle" :display="true" />
-        <Latex class="absolute latex-states energy-1" expression="\vert 1 \rangle" :display="true" />
         <Latex class="absolute latex-states energy-2" expression="\vert 2 \rangle" :display="true" />
-        <Latex class="absolute arrows latex-arrows arrow-0" expression="\omega_{10}" :display="true" />
         <Latex class="absolute arrows latex-arrows arrow-1" expression="\omega_{21}" :display="true" />
 
         <CavityMirror class="mirror1 absolute" :size="80" />
@@ -130,15 +133,18 @@ onMounted(() => {
 
         timeline.addLabel('step-7')
 
-        timeline.to([".arrows", ".energy-levels", ".latex-states", ".energy-dots"], {
+        timeline.to([".arrow-1", ".energy-2", ".latex-states.energy-2", ".energy-dots"], {
             autoAlpha: 0,
         })
 
         timeline.to(atomRef.value.rootRef, {
-            top: "50%",
-            left: "50%",
-            xPercent: -50,
+            autoAlpha: 0,
         }, "<")
+
+        timeline.to(["#two-level-system", "#energy-levels-svg"], {
+            x: "-=170",
+            y: "-=70",
+        })
 
         drawSVG(
             timeline,
