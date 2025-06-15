@@ -182,7 +182,7 @@ function initializeCavityModes(nCavityModes, modeSVGWidth, modeSVGHeight, modeCo
   const kList = Array.from({ length: nCavityModes }, (_, i) => (i + 1) * Math.PI / modeSVGWidth);
   const fList = kList.map(k => x => modeSVGHeight * Math.sin(k * x) / 3);
 
-  const modePaths = cavityModeRefs.value.map((ref) => ref.pathRef);
+  const modePaths = cavityModeRefs.value.map((ref) => ref.pathRef[0]);
 
   const coordinatesList = fList.map(f => getCoordinates(f, xList));
   const rawPathList = coordinatesList.map(coords => MotionPathPlugin.arrayToRawPath(coords));

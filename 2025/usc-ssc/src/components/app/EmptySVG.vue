@@ -3,7 +3,13 @@
         :width="props.width"
         :height="props.height"
         :viewBox="computedViewBox">
-        <path ref="pathRef" fill="none" d="" />
+        <path v-for="n in props.nPaths" 
+              :key="`path-${n}`"
+              ref="pathRef"
+              class="empty-svg-path"
+              fill="none"
+              d=""
+              />
     </svg>
 </template>
 
@@ -14,11 +20,13 @@ interface Props {
   width?: number
   height?: number
   viewBox?: string
+  nPaths?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
   width: 300,
   height: 300,
+  nPaths: 1,
 })
 
 const computedViewBox = computed(() => {
@@ -28,10 +36,16 @@ const computedViewBox = computed(() => {
   return `0 ${-props.height / 2} ${props.width} ${props.height}`;
 })
 
-const pathRef = ref<SVGPathElement | null>(null)
+const pathRef = ref<SVGPathElement[]>([])
 
 defineExpose({
   pathRef,
 })
 
 </script>
+
+<style scoped>
+.empty-svg-path {
+    stroke-width: 0.05;
+}
+</style>

@@ -11,6 +11,7 @@ const slideOrder = [
   '07-MinimalCoupling.vue',
   '08-GaugeInvariance.vue',
   '09-GaugeInvarianceTruncated.vue',
+  '10-RenormalizationConcept.vue',
   'ThankYou.vue'
 ]
 

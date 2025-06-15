@@ -95,17 +95,58 @@ export function alignObjectsCenterSet(timeline, fromElement, toElement, point, g
 /**
  * Calculates the distance between two elements
  * @param {string} fromId - CSS selector or ID of the source element
- * @param {string} toId - CSS selector or ID of the target element
+ * @param {string|string[]} toId - CSS selector/ID of target element(s), or array of selectors/IDs
  * @param {number[]} [fromOrigin=[0.5, 0.5]] - Origin point on source element [x, y] (0-1 range)
  * @param {number[]} [toOrigin=[0.5, 0.5]] - Origin point on target element [x, y] (0-1 range)
  * @returns {Object} Distance object with x and y properties
  */
 export function getDistance(fromId, toId, fromOrigin=[0.5, 0.5], toOrigin=[0.5, 0.5]) {
   const fromElements = gsap.utils.toArray(fromId);
+
+  if (fromElements.length != 1) {
+    console.warn(`Only one element is expected for ID: ${fromId}`);
+    return { x: 0, y: 0 };
+  }
+
+  // Handle toId as array of strings (calculate average position)
+  if (Array.isArray(toId)) {
+    if (toId.length === 0) {
+      console.warn(`toId array is empty`);
+      return { x: 0, y: 0 };
+    }
+
+    let totalX = 0;
+    let totalY = 0;
+    let validElements = 0;
+
+    for (const id of toId) {
+      const toElements = gsap.utils.toArray(id);
+      if (toElements.length === 1) {
+        const dist = MotionPathPlugin.getRelativePosition(fromElements[0], toElements[0], fromOrigin, toOrigin);
+        totalX += dist.x;
+        totalY += dist.y;
+        validElements++;
+      } else {
+        console.warn(`Only one element is expected for ID: ${id}`);
+      }
+    }
+
+    if (validElements === 0) {
+      console.warn(`No valid elements found in toId array`);
+      return { x: 0, y: 0 };
+    }
+
+    return {
+      x: totalX / validElements,
+      y: totalY / validElements
+    };
+  }
+
+  // Handle toId as single string (original behavior)
   const toElements = gsap.utils.toArray(toId);
 
-  if (fromElements.length != 1 || toElements.length != 1) {
-    console.warn(`Only one element is expected for IDs: ${fromId} and ${toId}`);
+  if (toElements.length != 1) {
+    console.warn(`Only one element is expected for ID: ${toId}`);
     return { x: 0, y: 0 };
   }
 
@@ -115,9 +156,9 @@ export function getDistance(fromId, toId, fromOrigin=[0.5, 0.5], toOrigin=[0.5, 
 }
 
 /**
- * Positions one element relative to another element
+ * Positions one element relative to another element or average of multiple elements
  * @param {string} fromId - CSS selector or ID of the element to move
- * @param {string} toId - CSS selector or ID of the reference element
+ * @param {string|string[]} toId - CSS selector/ID of reference element(s), or array of selectors/IDs
  * @param {number[]} [fromOrigin=[0.5, 0.5]] - Origin point on source element [x, y] (0-1 range)
  * @param {number[]} [toOrigin=[0.5, 0.5]] - Origin point on target element [x, y] (0-1 range)
  * @param {Object} [gap={x: 0, y: 0}] - Additional gap/offset to apply
