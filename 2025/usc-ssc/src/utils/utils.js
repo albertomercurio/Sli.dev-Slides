@@ -33,12 +33,17 @@ export function getCoordinates(f, xValues) {
  * @returns {string} The generated SVG path 'd' attribute string
  */
 export function plotDAttribute(path, xList, f, viewBox) {
-  // The SVG starts form the top left corner, so we need to flip the y-axis
-  const coordinates = getCoordinates((x) => viewBox.height - f(x), xList)
-  const rawPath = MotionPathPlugin.arrayToRawPath(coordinates)
-  const dAttribute = MotionPathPlugin.rawPathToString(rawPath)
+  // This is the y-value to flip the coordinates around.
+  const flipAxis = viewBox.y * 2 + viewBox.height;
 
-  path.setAttribute("d", dAttribute)
+  // The SVG y-axis points down, so we flip our function's output
+  // around the viewBox's central axis.
+  const coordinates = getCoordinates((x) => flipAxis - f(x), xList);
+  
+  const rawPath = MotionPathPlugin.arrayToRawPath(coordinates);
+  const dAttribute = MotionPathPlugin.rawPathToString(rawPath);
+
+  path.setAttribute("d", dAttribute);
 
   return dAttribute;
 }

@@ -48,7 +48,7 @@ const slideRef = ref(null)
 const ctx = gsap.context(() => { }, slideRef.value)
 
 // Double Well SVG Properties
-const doubleWellViewBoxBounds = { x: -1.2, y: 1, width: 2.4, height: 2 }
+const doubleWellViewBoxBounds = { x: -1.2, y: -1.5, width: 2.4, height: 3.5 }
 const nDoubleWellLevels = 5 // Number of energy levels to display
 const doubleWellLevelsColors = ["#236B8E", "#83C167", "#E07A5F", "#F4A261", "#2A9D8F"]
 
