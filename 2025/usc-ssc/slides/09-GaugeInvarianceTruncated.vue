@@ -17,6 +17,16 @@
         <h3 id="question" class="absolute w-full !text-slate-600">
             Are the two low-energy modes equivalent?
         </h3>
+
+        <img id="de-bernardis-gauge" class="absolute" src="/images/plots/de-bernardis-gauge.svg">
+        <p id="de-bernardis-reference" class="absolute text-black text-xs italic underline">De Bernardis, et al., Phys. Rev. A 98.5 (2018)</p>
+
+        <img id="di-stefano-gauge" class="absolute" src="/images/plots/di-stefano-gauge.png">
+        <p id="di-stefano-reference" class="absolute text-black text-xs italic underline">Di Stefano, et al.,  Nat. Phys. 15, 803–808 (2019)</p>
+
+        <h3 id="question-dipole-gauge" class="absolute w-full !text-slate-600">
+            Is the dipole gauge always good?
+        </h3>
     </div>
 </template>
 
@@ -28,12 +38,11 @@ import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin'
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin'
 gsap.registerPlugin(DrawSVGPlugin)
 gsap.registerPlugin(MotionPathPlugin)
-// import { DeBernardisGauge} from '/images/plots/DeBernardisGauge.vue'
 
 const slideRef = ref(null)
 const ctx = gsap.context(() => { }, slideRef.value)
 
-const maxSteps = ref(8); // Maximum steps for the slide
+const maxSteps = ref(11); // Maximum steps for the slide
 const props = defineProps({
   step: { type: Number, required: true }
 })
@@ -91,7 +100,7 @@ onMounted(() => {
         })
 
         timeline.to("#coulomb-hamiltonian-projected-2", {
-            bottom: 80,
+            bottom: 100,
             yPercent: 50,
         }, "<")
 
@@ -127,7 +136,7 @@ onMounted(() => {
             autoAlpha: 0,
         })
         timeline.to("#dipole-hamiltonian-projected-3", {
-            top: 80,
+            top: 100,
         }, "<")
 
         timeline.addLabel("step-7")
@@ -137,6 +146,34 @@ onMounted(() => {
         })
 
         timeline.addLabel("step-8")
+
+        timeline.to(["#coulomb-hamiltonian-projected-2", "#dipole-hamiltonian-projected-3", "#question"], {
+            autoAlpha: 0,
+        })
+
+        timeline.fromTo(["#de-bernardis-gauge", "#de-bernardis-reference"], {
+            autoAlpha: 0,
+            scale: 0,
+        }, {
+            autoAlpha: 1,
+            scale: 1,
+        })
+
+        timeline.addLabel("step-9")
+
+        timeline.to(["#de-bernardis-gauge", "#de-bernardis-reference", "#di-stefano-gauge", "#di-stefano-reference"], {
+            x: "+= 1200",
+        })
+
+        timeline.addLabel("step-10")
+
+        timeline.to(["#di-stefano-gauge", "#di-stefano-reference"], {
+            autoAlpha: 0,
+            scale: 0,
+        })
+        timeline.to("#question-dipole-gauge", {
+            autoAlpha: 1,
+        })
 
     }, slideRef.value)
 })
@@ -152,11 +189,22 @@ function GSAPInitializeElements() {
         scale: 1.2,
     })
 
-    gsap.set("#projection-operator", {
+    gsap.set(["#projection-operator", "#de-bernardis-gauge", "#di-stefano-gauge"], {
         top: "50%",
         left: "50%",
         xPercent: -50,
         yPercent: -50,
+    })
+
+    gsap.set(["#question", "#question-dipole-gauge"], {
+        top: "50%",
+        left: "50%",
+        xPercent: -50,
+        yPercent: -100,
+    })
+
+    gsap.set("#di-stefano-gauge", {
+        scale: 0.3,
     })
 
     setAlignElementTo(gsap, "#coulomb-hamiltonian-projected-1", "#projection-operator", [0.5, 0.0], [0.5, 1.0]);
@@ -169,15 +217,16 @@ function GSAPInitializeElements() {
 
     setAlignElementTo(gsap, "#dipole-hamiltonian-projected-3", "#dipole-hamiltonian-projected-2", [0.5, 0.0], [0.5, 1.0]);
 
-    gsap.set("#question", {
-        top: "50%",
-        left: "50%",
-        xPercent: -50,
-        yPercent: -100,
+    setAlignElementTo(gsap, "#de-bernardis-reference", "#de-bernardis-gauge", [0.5, 0.0], [0.5, 1.02]);
+
+    setAlignElementTo(gsap, "#di-stefano-reference", "#di-stefano-gauge", [0.5, 0.0], [0.5, 1.02]);
+
+    gsap.set(["#coulomb-hamiltonian-projected-1", "#coulomb-hamiltonian-projected-2", "#dipole-hamiltonian-projected-1", "#dipole-hamiltonian-projected-2", "#dipole-hamiltonian-projected-3", "#question", "#de-bernardis-gauge", "#de-bernardis-reference", "#question-dipole-gauge"], {
+        autoAlpha: 0,
     })
 
-    gsap.set(["#coulomb-hamiltonian-projected-1", "#coulomb-hamiltonian-projected-2", "#dipole-hamiltonian-projected-1", "#dipole-hamiltonian-projected-2", "#dipole-hamiltonian-projected-3", "#question"], {
-        autoAlpha: 0,
+    gsap.set(["#di-stefano-gauge", "#di-stefano-reference"], {
+        x: "-= 1200"
     })
 }
 
