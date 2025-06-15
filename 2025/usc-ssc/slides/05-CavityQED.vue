@@ -18,12 +18,14 @@
             </g>
         </svg>
 
+        <Arrow class="arrow-0 arrows" :start="arrowCoordinates[0].start" :end="arrowCoordinates[0].end" />
+        <Arrow class="arrow-1 arrows" :start="arrowCoordinates[1].start" :end="arrowCoordinates[1].end" />
+
         <Latex class="absolute latex-states energy-0" expression="\vert 0 \rangle" :display="true" />
         <Latex class="absolute latex-states energy-1" expression="\vert 1 \rangle" :display="true" />
         <Latex class="absolute latex-states energy-2" expression="\vert 2 \rangle" :display="true" />
-
-        <Arrow class="arrow-0" :start="arrowCoordinates[0].start" :end="arrowCoordinates[0].end" />
-        <Arrow class="arrow-1" :start="arrowCoordinates[1].start" :end="arrowCoordinates[1].end" />
+        <Latex class="absolute arrows latex-arrows arrow-0" expression="\omega_{10}" :display="true" />
+        <Latex class="absolute arrows latex-arrows arrow-1" expression="\omega_{21}" :display="true" />
     </div>
 </template>
 
@@ -46,7 +48,7 @@ const arrowCoordinates = ref(Array.from({ length: 2 }, (_, i) => ({
     end: { x: 20, y: 40 }
 })))
 
-const maxSteps = ref(4); // Maximum steps for the slide
+const maxSteps = ref(7); // Maximum steps for the slide
 const props = defineProps({
   step: { type: Number, required: true }
 })
@@ -101,6 +103,24 @@ onMounted(() => {
 
         timeline.addLabel('step-4')
 
+        timeline.to(".arrow-0", {
+            autoAlpha: 1, 
+        })
+
+        timeline.addLabel('step-5')
+
+        timeline.to(".arrow-1", {
+            autoAlpha: 1, 
+        })
+
+        timeline.addLabel('step-6')
+
+        timeline.to([".arrow-1", ".energy-2", ".energy-dots"], {
+            autoAlpha: 0.2,
+        })
+
+        timeline.addLabel('step-7')
+
     }, slideRef.value)
 })
 
@@ -125,6 +145,14 @@ function GSAPInitializeElements() {
 
             arrowCoordinates.value[i-1].start = pointStart
             arrowCoordinates.value[i-1].end = pointEnd
+
+            let latexArrow = gsap.utils.toArray(`.latex-arrows.arrow-${i-1}`)[0]
+            alignObjectsCenterSet(gsap, arrow, latexArrow, { x: pointStart.x - 30, y: (pointStart.y + pointEnd.y) / 2}, 20)
+
+            gsap.set(latexArrow, {
+                xPercent: -100,
+                yPercent: -50,
+            })
         }
     }
 
@@ -135,6 +163,9 @@ function GSAPInitializeElements() {
         autoAlpha: 0,
     })
     gsap.set('.energy-dots', {
+        autoAlpha: 0,
+    })
+    gsap.set('.arrows', {
         autoAlpha: 0,
     })
 }
