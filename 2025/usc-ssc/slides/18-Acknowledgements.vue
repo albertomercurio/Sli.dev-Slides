@@ -22,7 +22,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, watch } from 'vue'
-import { preloadImages, setAlignElementTo } from '../src/utils/utils.js'
+import { preloadImages, setAlignElementTo, runWhenLoaded } from '../src/utils/utils.js'
 import { gsap } from 'gsap'
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin'
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin'
@@ -144,13 +144,31 @@ function GSAPInitializeElements() {
         // yPercent: -50,
     })
 
-    setAlignElementTo("#daniele-lamberto-label", "#daniele-lamberto", [0.5, 0.0], [0.5, 1.0])
-    setAlignElementTo("#salvatore-savasta-label", "#salvatore-savasta", [0.5, 0.0], [0.5, 1.0])
-    setAlignElementTo("#omar-distefano-label", "#omar-distefano", [0.5, 0.0], [0.5, 1.0])
-    setAlignElementTo("#vincenzo-savona-label", "#vincenzo-savona", [0.5, 0.0], [0.5, 1.0])
-    setAlignElementTo("#vincent-jouanny-label", "#vincent-jouanny", [0.5, 0.0], [0.5, 1.0])
-    setAlignElementTo("#pasquale-scarlino-label", "#pasquale-scarlino", [0.5, 0.0], [0.5, 1.0])
+    // setAlignElementTo("#daniele-lamberto-label", "#daniele-lamberto", [0.5, 0.0], [0.5, 1.0])
+    // setAlignElementTo("#salvatore-savasta-label", "#salvatore-savasta", [0.5, 0.0], [0.5, 1.0])
+    // setAlignElementTo("#omar-distefano-label", "#omar-distefano", [0.5, 0.0], [0.5, 1.0])
+    // setAlignElementTo("#vincenzo-savona-label", "#vincenzo-savona", [0.5, 0.0], [0.5, 1.0])
+    // setAlignElementTo("#vincent-jouanny-label", "#vincent-jouanny", [0.5, 0.0], [0.5, 1.0])
+    // setAlignElementTo("#pasquale-scarlino-label", "#pasquale-scarlino", [0.5, 0.0], [0.5, 1.0])
 
+    runWhenLoaded("#daniele-lamberto", () => {
+        setAlignElementTo("#daniele-lamberto-label", "#daniele-lamberto", [0.5, 0.0], [0.5, 1.0])
+    })
+    runWhenLoaded("#salvatore-savasta", () => {
+        setAlignElementTo("#salvatore-savasta-label", "#salvatore-savasta", [0.5, 0.0], [0.5, 1.0])
+    })
+    runWhenLoaded("#omar-distefano", () => {
+        setAlignElementTo("#omar-distefano-label", "#omar-distefano", [0.5, 0.0], [0.5, 1.0])
+    })
+    runWhenLoaded("#vincenzo-savona", () => {
+        setAlignElementTo("#vincenzo-savona-label", "#vincenzo-savona", [0.5, 0.0], [0.5, 1.0])
+    })
+    runWhenLoaded("#vincent-jouanny", () => {
+        setAlignElementTo("#vincent-jouanny-label", "#vincent-jouanny", [0.5, 0.0], [0.5, 1.0])
+    })
+    runWhenLoaded("#pasquale-scarlino", () => {
+        setAlignElementTo("#pasquale-scarlino-label", "#pasquale-scarlino", [0.5, 0.0], [0.5, 1.0])
+    })
 }
 
 </script>
