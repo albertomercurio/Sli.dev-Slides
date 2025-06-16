@@ -17,6 +17,7 @@ const slideOrder = [
   '13-SuperStrongQubit.vue',
   '14-SuperStrongQubitExperimentIntro.vue',
   '15-SuperStrongModeModeCoupling.vue',
+  '16-SuperStrongDirectionality.vue',
   'ThankYou.vue'
 ]
 
