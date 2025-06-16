@@ -20,7 +20,7 @@ gsap.registerPlugin(MotionPathPlugin)
 const slideRef = ref(null)
 const ctx = gsap.context(() => { }, slideRef.value)
 
-const maxSteps = ref(3); // Maximum steps for the slide
+const maxSteps = ref(2); // Maximum steps for the slide
 const props = defineProps({
   step: { type: Number, required: true }
 })
