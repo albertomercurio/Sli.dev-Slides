@@ -19,6 +19,7 @@ const slideOrder = [
   '15-SuperStrongModeModeCoupling.vue',
   '16-SuperStrongDirectionality.vue',
   '17-Conclusions.vue',
+  '18-Acknowledgements.vue',
   'ThankYou.vue'
 ]
 
