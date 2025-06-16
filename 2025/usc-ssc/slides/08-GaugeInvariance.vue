@@ -4,7 +4,7 @@
 
         <Latex id="gauge-transformation-potentials" class="latex-formula absolute" expression="\begin{align*} A \to A + \nabla \chi \\ \phi \to \phi - \frac{\partial \chi}{\partial t} \end{align*}" :display="true" />
 
-        <Latex id="gauge-transformation-fields" class="latex-formula absolute" expression="\begin{align*} \mathbf{E} \to \mathbf{E} + \nabla \times \mathbf{A} \\ \mathbf{B} \to \mathbf{B} - \nabla \chi \end{align*}" :display="true" />
+        <!-- <Latex id="gauge-transformation-fields" class="latex-formula absolute" expression="\begin{align*} \mathbf{E} \to \mathbf{E} + \nabla \times \mathbf{A} \\ \mathbf{B} \to \mathbf{B} - \nabla \chi \end{align*}" :display="true" /> -->
 
         <div id="coulomb-gauge-label" class="absolute text-[#555] text-2xl">
             Coulomb Gauge
@@ -68,7 +68,7 @@ onMounted(() => {
 
         timeline.addLabel("step-0")
 
-        timeline.to(["#gauge-transformation-potentials", "#gauge-transformation-fields"], {
+        timeline.to(["#gauge-transformation-potentials"], {
             autoAlpha: 0,
         })
 
@@ -122,13 +122,13 @@ function GSAPInitializeElements() {
         scale: 1.2,
     })
 
-    gsap.set("#gauge-transformation-fields", {
-        bottom: "30%",
-        left: "50%",
-        xPercent: -50,
-        yPercent: 50,  // Changed from -50 to 50 for bottom positioning
-        scale: 1.2,
-    })
+    // gsap.set("#gauge-transformation-fields", {
+    //     bottom: "30%",
+    //     left: "50%",
+    //     xPercent: -50,
+    //     yPercent: 50,  // Changed from -50 to 50 for bottom positioning
+    //     scale: 1.2,
+    // })
 
     gsap.set("#coulomb-gauge-label", {
         top: "20%",

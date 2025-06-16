@@ -37,7 +37,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { gsap } from 'gsap'
-import { setAlignElementTo } from '../src/utils/utils.js'
+import { setAlignElementTo, runWhenLoaded } from '../src/utils/utils.js'
 
 const slideRef = ref(null)
 const ctx = gsap.context(() => { }, slideRef.value)
@@ -51,6 +51,7 @@ defineExpose({
 });
 
 onMounted(() => {
+    setTimeout(() => {
     ctx.add(() => {
         GSAPInitializeElements()
 
@@ -100,6 +101,7 @@ onMounted(() => {
         timeline.addLabel("step-3")
         
     }, slideRef.value)
+    }, 50)
 })
 
 onUnmounted(() => {
@@ -153,6 +155,19 @@ function GSAPInitializeElements() {
     setAlignElementTo("#usc-label", "#latex-usc", [0.5, 0.0], [0.5, 1],)
 
     setAlignElementTo("#dsc-label", "#latex-dsc", [0.5, 0.0], [0.5, 1],)
+
+    // runWhenLoaded("#latex-weak", () => {
+    //     setAlignElementTo("#weak-label", "#latex-weak", [0.5, 0.0], [0.5, 1],)
+    // })
+    // runWhenLoaded("#latex-strong", () => {
+    //     setAlignElementTo("#strong-label", "#latex-strong", [0.5, 0.0], [0.5, 1],)
+    // })
+    // runWhenLoaded("#latex-usc", () => {
+    //     setAlignElementTo("#usc-label", "#latex-usc", [0.5, 0.0], [0.5, 1],)
+    // })
+    // runWhenLoaded("#latex-dsc", () => {
+    //     setAlignElementTo("#dsc-label", "#latex-dsc", [0.5, 0.0], [0.5, 1],)
+    // })
 
     gsap.set(["#arrow-weak-strong", "#arrow-usc-dsc", "#weak-label", "#strong-label", "#usc-label", "#dsc-label", "#latex-weak", "#latex-strong", "#latex-usc", "#latex-dsc"], {
         autoAlpha: 0,
