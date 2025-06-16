@@ -17,6 +17,7 @@ import EmptySVG from './components/app/EmptySVG.vue'
 import CodeBlock from './components/app/CodeBlock.vue'
 import Latex from './components/app/LaTeX.vue'
 import Arrow from './components/app/Arrow.vue'
+import CurvedDoubleArrow from './components/app/CurvedDoubleArrow.vue'
 
 // User Components
 import BohrAtom from './components/BohrAtom.vue'
@@ -33,6 +34,7 @@ app.component('EmptySVG', EmptySVG)
 app.component('CodeBlock', CodeBlock)
 app.component('Latex', Latex)
 app.component('Arrow', Arrow)
+app.component('CurvedDoubleArrow', CurvedDoubleArrow)
 
 // Registering User Components
 app.component('BohrAtom', BohrAtom)

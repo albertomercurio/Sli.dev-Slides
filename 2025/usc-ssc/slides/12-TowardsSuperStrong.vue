@@ -36,6 +36,8 @@
         <CavityMirror id="cavity-mirror-right" class="absolute" />
         <Latex id="latex-cavity-fsr" class="absolute latex-formula" expression="\Delta \omega = \frac{c}{2 L}" :display="true" />
 
+        <!-- Coupled Cavity Array -->
+
         <CavityMirror v-for="i in totalCavities" :key="`cavity-mirror-left-${i}`" 
                         :id="`cavity-mirror-left-${i}`"
                         class="absolute cavity-mirror-left" ref="cavityMirrorLeftRef"
@@ -46,26 +48,9 @@
                         :size="30" />
 
         <!-- Curved Arrows-->
-        <svg v-for="i in (totalCavities-1)" :key="`curved-arrow-${i}`" :id="`curved-arrow-${i}`" class="absolute hopping-arrows" width="200" height="250" viewBox="0 0 300 150">
-        <!-- Re-usable arrow-head, scaled up -->
-        <defs>
-            <marker id="arrowHead"
-                    viewBox="0 0 12 12"
-                    refX="6" refY="6"
-                    markerWidth="10" markerHeight="10"
-                    orient="auto-start-reverse">
-            <path d="M0,0 L12,6 L0,12 Z" fill="black"/>
-            </marker>
-        </defs>
-
-        <!-- Curved path from (50,100) to (250,100) via control (150,20) -->
-        <path d="M 50 100 Q 150 20 250 100"
-                fill="none"
-                stroke="black"
-                stroke-width="2"
-                marker-start="url(#arrowHead)"
-                marker-end="url(#arrowHead)" />
-        </svg>
+        <CurvedDoubleArrow v-for="i in (totalCavities-1)" :key="`curved-arrow-${i}`"
+                :id="`curved-arrow-${i}`"
+                class="absolute hopping-arrows" />
 
         <Latex v-for="i in (totalCavities-1)" :key="`latex-hopping-${i}`"
                 :id="`latex-hopping-${i}`"
@@ -78,7 +63,7 @@
             :width="modeSVGWidth" :height="modeSVGHeight"
             class="cavity-mode absolute" />
 
-        <Latex id="cca-fsr" class="absolute latex-formula" expression="\Delta \omega = 4 J / N" :display="true" />
+        <Latex id="cca-fsr" class="absolute latex-formula" expression="\Delta \omega \approx 4 J / N" :display="true" />
     </div>
 </template>
 
@@ -343,6 +328,11 @@ function GSAPInitializeElements() {
         rotation: 180,
     })
 
+    gsap.set([".cavity-mirror-left .cavity-mirror", ".cavity-mirror-right .cavity-mirror"], {
+        drawSVG: "0%",
+        fill: "#00000000",
+    })
+
     // Curved Arrows Initialization
 
     gsap.set(".hopping-arrows", {
@@ -374,11 +364,6 @@ function GSAPInitializeElements() {
         yPercent: -50,
         x: 6,
         y: 120,
-    })
-
-    gsap.set([".cavity-mirror-left .cavity-mirror", ".cavity-mirror-right .cavity-mirror"], {
-        drawSVG: "0%",
-        fill: "#00000000",
     })
 
     gsap.set("#cca-fsr", {
