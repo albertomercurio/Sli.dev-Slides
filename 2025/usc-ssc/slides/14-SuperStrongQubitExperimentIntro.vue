@@ -3,6 +3,7 @@
         <SlideTitle>Cavity Metamaterial Coupled to a Qubit</SlideTitle>
 
         <img id="cca-circuit" class="absolute" src="/images/cca-circuit.png">
+        <img id="cca-peaks" class="absolute" src="/images/plots/cca-peaks.png">
         <img id="cca-spectrum-alc" class="absolute" src="/images/plots/cca-spectrum-alc.png">
         <img id="cca-coupling-profile" class="absolute" src="/images/plots/cca-coupling-profile.png">
     </div>
@@ -20,7 +21,7 @@ gsap.registerPlugin(MotionPathPlugin)
 const slideRef = ref(null)
 const ctx = gsap.context(() => { }, slideRef.value)
 
-const maxSteps = ref(2); // Maximum steps for the slide
+const maxSteps = ref(3); // Maximum steps for the slide
 const props = defineProps({
   step: { type: Number, required: true }
 })
@@ -31,6 +32,7 @@ defineExpose({
 onMounted(async () => {
     await preloadImages([
         '/images/cca-circuit.png',
+        '/images/plots/cca-peaks.png',
         '/images/plots/cca-spectrum-alc.png',
         '/images/plots/cca-coupling-profile.png',
     ])
@@ -61,13 +63,25 @@ onMounted(async () => {
             autoAlpha: 0,
         })
 
-        timeline.fromTo("#cca-spectrum-alc", {
+        timeline.fromTo("#cca-peaks", {
             autoAlpha: 0,
         }, {
             autoAlpha: 1,
         })
 
         timeline.addLabel("step-1")
+
+        timeline.to("#cca-peaks", {
+            autoAlpha: 0,
+        })
+
+        timeline.fromTo("#cca-spectrum-alc", {
+            autoAlpha: 0,
+        }, {
+            autoAlpha: 1,
+        })
+
+        timeline.addLabel("step-2")
 
         timeline.to("#cca-spectrum-alc", {
             left: "22%",
@@ -80,7 +94,7 @@ onMounted(async () => {
             x: "-=1000",
         }, "<")
 
-        timeline.addLabel("step-2")
+        timeline.addLabel("step-3")
         
     }, slideRef.value)
 })
@@ -92,7 +106,7 @@ onUnmounted(() => {
 })
 
 function GSAPInitializeElements() {
-    gsap.set(["#cca-circuit", "#cca-spectrum-alc", "#cca-coupling-profile"], {
+    gsap.set(["#cca-circuit", "#cca-peaks", "#cca-spectrum-alc", "#cca-coupling-profile"], {
         top: "50%",
         left: "50%",
         xPercent: -50,
@@ -101,6 +115,9 @@ function GSAPInitializeElements() {
 
     gsap.set("#cca-circuit", {
         scale: 0.6,
+    })
+    gsap.set("#cca-peaks", {
+        scale: 0.35,
     })
     gsap.set("#cca-spectrum-alc", {
         scale: 0.35,

@@ -28,7 +28,7 @@ const slideRef = ref(null)
 const ctx = gsap.context(() => { }, slideRef.value)
 
 
-const maxSteps = ref(6); // Maximum steps for the slide
+const maxSteps = ref(5); // Maximum steps for the slide
 const props = defineProps({
   step: { type: Number, required: true }
 })
