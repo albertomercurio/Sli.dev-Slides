@@ -11,6 +11,8 @@
         <Latex id="s-ll" class="absolute" expression="\vert S_\mathrm{LL} \vert" :display="true" />
         <Latex id="s-rr" class="absolute" expression="\vert S_\mathrm{RR} \vert" :display="true" />
 
+        <img id="cca-localization-reflection" class="absolute" src="/images/plots/cca-localization-reflection.png">
+
         <img id="cca-localization-sketch" class="absolute" src="/images/plots/cca-localization-sketch.png">
     </div>
 </template>
@@ -28,7 +30,7 @@ const slideRef = ref(null)
 const ctx = gsap.context(() => { }, slideRef.value)
 
 
-const maxSteps = ref(5); // Maximum steps for the slide
+const maxSteps = ref(6); // Maximum steps for the slide
 const props = defineProps({
   step: { type: Number, required: true }
 })
@@ -40,6 +42,7 @@ defineExpose({
 onMounted(async () => {
     await preloadImages([
         '/images/cca-circuit.png',
+        '/images/plots/cca-localization-reflection.png',
         '/images/plots/cca-localization-sketch.png',
     ])
 
@@ -118,10 +121,24 @@ onMounted(async () => {
             scale: 0.3,
         })
 
-        timeline.fromTo("#cca-localization-sketch", {
+        timeline.fromTo("#cca-localization-reflection", {
             x: "+=1200",
         }, {
             x: "-=1000",
+        }, "<")
+
+        timeline.addLabel("step-5")
+
+        timeline.to("#cca-localization-reflection", {
+            autoAlpha: 0,
+        })
+
+        timeline.fromTo("#cca-localization-sketch", {
+            autoAlpha: 0,
+            x: 200,
+        }, {
+            autoAlpha: 1,
+            x: 200,
         }, "<")
 
         timeline.addLabel("step-6")
@@ -136,7 +153,7 @@ onUnmounted(() => {
 })
 
 function GSAPInitializeElements() {
-    gsap.set(["#cca-circuit", "#cca-localization-sketch"], {
+    gsap.set(["#cca-circuit", "#cca-localization-reflection", "#cca-localization-sketch"], {
         top: "50%",
         left: "50%",
         xPercent: -50,
