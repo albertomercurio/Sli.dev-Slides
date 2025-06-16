@@ -12,6 +12,7 @@ const slideOrder = [
   '08-GaugeInvariance.vue',
   '09-GaugeInvarianceTruncated.vue',
   '10-RenormalizationConcept.vue',
+  '11-RenormalizedQRM.vue',
   'ThankYou.vue'
 ]
 
