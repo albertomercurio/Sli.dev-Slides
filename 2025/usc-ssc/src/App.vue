@@ -13,6 +13,7 @@ const slideOrder = [
   '09-GaugeInvarianceTruncated.vue',
   '10-RenormalizationConcept.vue',
   '11-RenormalizedQRM.vue',
+  '12-TowardsSuperStrong.vue',
   'ThankYou.vue'
 ]
 
@@ -48,10 +49,12 @@ function prevSlide() {
     currentSlideStep.value--
     return
   }
-   if (currentSlideIndex.value > 0) {
+  if (currentSlideIndex.value > 0) {
     currentSlideIndex.value--
     currentSlideStep.value = slides[currentSlideIndex.value]?.steps ?? 0
-   }
+  } else if (currentSlideIndex.value === 0) {
+    currentSlideIndex.value = slides.length - 1 // Loop back to the last slide
+  }
 }
 
 // --- Keyboard Navigation ---
